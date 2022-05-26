@@ -1,0 +1,1 @@
+# lovewellness-theme
