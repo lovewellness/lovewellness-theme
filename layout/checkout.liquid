@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+<!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.41&shop=dirt-project.myshopify.com"></script>
+<!-- End BlackCrow Script Tag -->
+   
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+
+    <title>{{ page_title }}</title>
+
+    <script src="https://c.evidon.com/dg/dg.js" companyid="6741"></script>
+		
+		<script type="text/javascript">
+			(function (id) {
+				function append(scriptid, url, async) {
+					var d = document, sn = 'script', f = d.getElementsByTagName(sn)[0];
+					if (!f) f = d.head;
+					var s = d.createElement(sn);
+					s.async = async;
+					s.id = scriptid;
+					s.src = url;
+					s.charset = 'utf-8';
+					f.parentNode.insertBefore(s, f);
+				}
+
+				function is2parttld(value) {
+					var tldindicators = ['co', 'com', 'info', 'web', 'info', 'gov', 'edu', 'biz', 'net', 'org'];
+					var countryindicators = ['uk', 'us', 'fr', 'es', 'de', 'at', 'au', 'ae', 'be', 'br', 'ca', 'ch', 'cn', 'co', 'cz', 'dk', 'eg', 'eu', 'fi', 'gb', 'gr', 'hk', 'hr', 'hu', 'ie', 'in', 'jp', 'mx', 'nl', 'no', 'nz', 'pl', 'ro', 'ru', 'se'];
+					return (tldindicators.indexOf(value) !== -1 || countryindicators.indexOf(value) !== -1);
+				}
+
+				function getRootDomain() {
+					var parts = window.location.hostname.split('.');
+					if (parts.length === 2) rootDomain = parts[0];
+					else if (parts.length > 2) {
+						// see if the next to last value is a common tld
+						var part = parts[parts.length - 2];
+						if (is2parttld(part)) {
+							rootDomain = parts[parts.length - 3]; // go back one more
+						}
+						else {
+							rootDomain = part;
+						}
+					}
+
+					return rootDomain;
+				}
+
+				window.evidon = {};
+				window.evidon.id = id;
+				window.evidon.test = false;  // set to true for non-production testing.
+				//window.evidon.userid = '';
+
+				var cdn = '//c.evidon.com/', rootDomain = getRootDomain(), noticecdn = cdn + 'sitenotice/';
+				append('evidon-notice', noticecdn + 'evidon-sitenotice-tag.js', false);
+				append('evidon-location', cdn + 'geo/country.js', true);
+				append('evidon-themes', noticecdn + id + '/snthemes.js', true);
+				if (rootDomain) append('evidon-settings', noticecdn + id + '/' + rootDomain + (window.evidon.test ? '/test' : '') + '/settings.js', true);
+
+				window.evidon.priorConsentCallback = function (categories, vendors, cookies) {
+					// add the tags which need to wait for prior consent
+					// here.  This should be all your advertising tags and
+					// probably most of your social and tracking tags.
+					var handlers = {
+						categories: {
+							'advertiser': 'handleAdvertiser',
+							'ad exchange': 'handleAdExchange',
+							'ad network': 'handleAdNetwork',
+							'ad server': 'handleAdServer',
+							'ad verification': 'handleAdVerification',
+							'agency': 'handleAgency',
+							'analytics provider': 'handleAnalyticsProvider',
+							'business intelligence': 'handleBusinessIntelligence',
+							'content management/saas': 'handleContentManagementSaaS',
+							'creative/ad format technology': 'handleCreativeAdFormatTechnology',
+							'data aggregator/supplier': 'handleDataAggregatorSupplier',
+							'data management platform': 'handleDataManagementPlatform',
+							'demand side platform': 'handleDemandSidePlatform',
+							'marketing solutions': 'handleMarketingSolutions',
+							'mobile': 'handleMobile',
+							'online privacy platform': 'handleOnlinePrivacyPlatform',
+							'optimizer': 'handleOptimizer',
+							'other': 'handleOther',
+							'publisher': 'handlePublisher',
+							'research provider': 'handleResearchProvider',
+							'retargeter': 'handleRetargeter',
+							'social media': 'handleSocialMedia',
+							'supply side platform': 'handleSupplySidePlatform',
+							'tag manager': 'handleTagManager',
+							'video': 'handleVideo',
+							'website optimization': 'handleWebsiteOptimization',
+						},
+						vendors: {}
+					};
+
+					for (var category in categories) {
+						if (!categories[category]) continue;
+						var handler = window.evidon[handlers.categories[category]];
+						if (typeof handler === 'function') handler();
+					}
+					for (var vendor in vendors) {
+						if (!vendors[vendor]) continue;
+						var handler = window.evidon[handlers.vendors[vendor]];
+						if (typeof handler === 'function') handler();
+					}
+				}
+
+				window.evidon.closeCallback = function () {
+					// this is executed if the user closed a UI element without either Accepting (providing consent)
+					// or Declining (declining to provide consent).
+				}
+
+				window.evidon.consentWithdrawnCallback = function () {
+					// this is exeucted if the user withdraws consent and elects to
+					// no longer allow technologies to run on the site.
+				}
+
+				window.evidon.consentDeclinedCallback = function () {
+					// this is executed if the user explicitly declines giving consent by
+					// using a Decline button
+				}
+			})(6741);
+		</script>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ checkout_scripts }}
+
+    <!-- START Attentive --> 
+    <script src="https://cdn.attn.tv/checkout/checkout.js" defer></script> 
+    <script src="https://cdn.attn.tv/lovewellness/dtag.js"></script>
+
+    <style type="text/css">
+      .section__content.section__content__attentive {
+        border-radius: 4px;
+        background-color: #fafafa;
+        border: solid 1px #e6e6e6;
+        padding: 12px;
+      }
+      
+      .section__content.section__content__attentive .input-checkbox {
+        background: #fff;
+      }
+      
+      .section__footer__attentive {
+        font-size: 9px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.25;
+        letter-spacing: normal;
+        text-align: left;
+        color: #000;
+        padding-top: 4px;
+      }
+      
+      .section__footer__attentive a {
+        color: #000;
+        text-decoration: underline;
+      }
+      
+      .section__footer__attentive b {
+        font-weight: bold;
+      }
+      
+      .checkbox__label.checkbox__label__attentive {
+        cursor: auto;
+        margin-left: 0.75em;
+      }
+      
+      .checkbox__label__attentive__header {
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1;
+        letter-spacing: normal;
+        text-align: left;
+        color: #333333;
+        margin-bottom: 5px;
+      }
+      
+      .checkbox__label__attentive__subheader {
+        display: block;
+        font-size: 12px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.17;
+        letter-spacing: normal;
+        text-align: left;
+        color: #737373;
+        padding-top: 4px;
+      }
+      
+      .checkbox-wrapper {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        align-items: baseline;
+      }
+      
+      tr.total-line.total-line--recurring-total{
+      	display:none;
+      }
+      
+    
+    </style>
+    <!-- END Attentive -->
+
+
+    <!-- Google Tag Manager -->
+      <script>
+              var chck_step = window.Shopify.Checkout.step;
+        // loading GTM only on the checkout steps, but not on the order completiion page
+              if (chck_step == 'contact_information'||chck_step == 'shipping_method'||chck_step == 'payment_method') {
+          (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-N4LP9ZM');
+              }
+      </script>
+		<!-- End Google Tag Manager -->
+  </head>
+  <body>
+    {{ skip_to_content_link }}
+
+    <header class="banner" data-header role="banner">
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </header>
+
+    {{ order_summary_toggle }}
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main">
+          <header class="main__header" role="banner">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+
+            {% comment %} The Vaan Group - Order Bump (1/2) {% endcomment %}
+            <div id="superbump"></div>
+            {% comment %} END OF The Vaan Group - Order Bump (1/2) {% endcomment %}
+
+            {{ alternative_payment_methods }}
+          </header>
+          <main class="main__content" role="main">
+            {{ content_for_layout }}
+
+            <!-- Start Attentive -->
+            <div id="attentiveOptIn" class="fieldset-description" data-buyer-accepts-marketing-attentive="" aria-label="Phone Sign Up">
+              <div class="section__content section__content__attentive">
+                <div class="checkbox-wrapper">
+                  <div class="checkbox__input">
+                    <input name="attributes[buyer_accepts_marketing_attentive]" type="hidden" value="0" />
+                    <input
+                      class="input-checkbox"
+                      data-backup="buyer_accepts_marketing"
+                      type="checkbox"
+                      value="1"
+                      name="attributes[buyer_accepts_marketing_attentive]"
+                      id="checkout_buyer_accepts_marketing_attentive"
+                      aria-labelledby="headers"
+                      tabindex="0"
+                      focusable="true"
+                    />
+                  </div>
+                  <div class="checkbox__label checkbox__label__attentive">
+                    <span id="headers" tabindex="0" focusable="true">
+                      <div class="checkbox__label__attentive__header">
+                        Yes - I want to receive VIP access to text-only discounts and sales,
+                        updates on my orders, wellness tips, inspo & more.
+                      </div>
+                    </span>
+                    <div class="section__footer__attentive">
+                      By checking this box, you agree to receive recurring automated promotional and personalized marketing text messages <b>(e.g. cart reminders)</b> from Love Wellness at the cell number used when signing up. Consent is not
+                      a condition of any purchase. <b>Reply HELP for help and STOP to cancel.</b> Msg frequency varies. Msg & data rates may apply. View
+                      <a href="http://attn.tv/lovewellness/terms.html" target="_blank" rel="noopener noreferrer" aria-label="Love Wellness Terms Link">Terms</a> &amp;
+                      <a href="https://attnl.tv/p/l2H" target="_blank" rel="noopener noreferrer" aria-label="Love Wellness Privacy Link">Privacy</a>.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- insert HTML in body main__content section -->
+            <div id="attentiveTransactionalOptIn" class="fieldset-description" data-buyer-accepts-transactional-attentive="" aria-label="Phone Sign	Up">
+              <div class="section__content section__content__attentive">
+                <div class="checkbox-wrapper">
+                  <div class="checkbox__input">
+                    <input name="attributes[buyer_accepts_transactional_attentive]" type="hidden" value="0">
+                    <input class="input-checkbox" data-backup="buyer_accepts_transactional" type="checkbox" value="1"
+                    name="attributes[buyer_accepts_transactional_attentive]" id="checkout_buyer_accepts_transactional_attentive"
+                    aria-labelledby="headers" tabindex="0" focusable="true">
+                  </div>
+                  <div class="checkbox__label checkbox__label__attentive">
+                    <span id="headers" tabindex="0" focusable="true">
+                      <div class="checkbox__label__attentive__header">
+                        Get SMS updates about your subscription!
+                      </div>
+                      <div class="checkbox__label__attentive__subheader">
+                        Stay up to date on your purchase with order confirmation and	shipping confirmation messages
+                      </div>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Attentive -->
+            
+          </main>
+          <footer class="main__footer" role="contentinfo">
+            {{ content_for_footer }}
+          </footer>
+        </div>
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="yotpo-widget-instance" data-yotpo-instance-id="33658"></div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </aside>
+      </div>
+    </div>
+    
+    {% if checkout.line_items_subtotal_price == 0 %}
+      <script>       
+		document.addEventListener("DOMContentLoaded", function() {
+          
+          function check(){
+            var incl = false;
+            var names = document.getElementsByClassName('product__description__name');
+            Array.from(names).forEach(element => {
+              if(element.innerText.includes('FREE')==true){
+                  incl = true;
+              }
+            });
+
+            var email = false;
+            var input = document.getElementById('checkout_email').value.includes('@lovewellness.com');
+
+            var employee = document.querySelectorAll("[data-shopify-pay-customer-email*='@lovewellness.com']").length;
+            if(input || employee!=0){
+              email = true;
+            }
+
+            if(incl && email!=true){
+               //console.log('HIDE');
+               document.getElementById('continue_button').style.pointerEvents  = 'none';
+               document.getElementById('continue_button').style.opacity  = '0.5';
+               var fast = document.querySelectorAll('[data-testid="grid-cell"]');
+               Array.from(fast).forEach(element => {
+                element.style.pointerEvents  = 'none';
+                element.style.opacity  = '0.5';
+               });
+            } else {
+               //console.log('SHOW');
+               document.getElementById('continue_button').style.pointerEvents  = 'all';
+               document.getElementById('continue_button').style.opacity  = '1';
+               var fast = document.querySelectorAll('[data-testid="grid-cell"]');
+               Array.from(fast).forEach(element => {
+                element.style.pointerEvents  = 'all';
+                element.style.opacity  = '1';
+               });
+            }
+          
+          }
+          
+          var startTime = new Date().getTime();
+          var interval = setInterval(function(){
+              check();
+              if(new Date().getTime() - startTime > 15000){
+                  clearInterval(interval);
+                  return;
+              }
+          }, 1000); 
+          
+        
+          
+          
+          document.getElementById('checkout_email').oninput = function(){check();};
+        
+          
+          //document.querySelector(".shown-if-js[data-alternative-payments]").remove();
+          console.log(Shopify.Checkout)
+          
+          	/*let rem_btn = setInterval( function() {
+              	if (document.querySelector("#continue_button")) {
+                    document.querySelector("#continue_button").remove();
+                } else {
+                	clearInterval(rem_btn);
+                }
+            }, 100);
+          
+          document.querySelector("form[data-payment-form]").addEventListener('submit', event => {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log('no');
+          });*/       
+        });
+      </script>
+    {% endif %}
+
+    {{ tracking_code }}
+
+    {% comment %} The Vaan Group - Order Bump (2/2) {% endcomment %}
+      <script src="/apps/superbump/superbump_widget.js"></script>
+    {% comment %} END OF The Vaan Group - Order Bump (2/2) {% endcomment %}
+
+    {{ 'californiaProposition65.js' | asset_url | script_tag }}
+
+
+    {% comment %} Start dataLayer {% endcomment %}
+    <script>
+        var dataLayer = window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+          event: 'InitiateCheckout',
+          itemSKUs: '{{ skus }}'
+      });
+    </script>
+    {% comment %} End dataLayer {% endcomment %}
+
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/_oArhnSQcctEAXaHiA-rPg" async></script>
+  
+  </body>
+</html>

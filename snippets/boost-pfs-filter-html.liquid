@@ -1,0 +1,125 @@
+{%- capture boost_pfs_layout -%}
+{%- case layout -%}
+{%- when 'productGridItemHtml' -%}
+{% raw %}
+<li class="productgrid--item {{customClass}}" data-product-item data-product-quickshop-url="{{itemUrl}}" data-quickshop-hash="{{itemDataSha256}}">
+  <div class="productitem" data-product-item-content>
+    <a class="productitem--image-link" href="{{itemUrl}}" tabindex="-1" data-product-page-link>
+      <figure class="productitem--image" data-product-item-image>
+        {{itemImages}}
+        {{itemLabels}}
+      </figure>
+    </a>
+    <div class="productitem--info">
+      {{itemSwatch}}
+      {{emphasizePrice}}
+      <h2 class="productitem--title">
+        <a href="{{itemUrl}}" data-product-page-link>{{itemTitle}}</a>
+      </h2>
+      {{itemSubTitle}}
+      {{itemReviews}}
+      {{itemVendor}}
+      {{noEmphasizePrice}}
+      {{itemDescription}}
+    </div>
+    {{itemActions}}
+  </div>
+  {{itemQuickShopSettings}}
+</li>
+{% endraw %}
+
+{%- when 'productListItemHtml' -%}
+{% raw %}
+<li class="productgrid--item {{customClass}}" data-product-item data-product-quickshop-url="{{itemUrl}}" data-quickshop-hash="{{itemDataSha256}}">
+  <div class="productitem" data-product-item-content>
+    <a class="productitem--image-link" href="{{itemUrl}}" tabindex="-1" data-product-page-link>
+      <figure class="productitem--image" data-product-item-image>
+        {{itemImages}}
+        {{itemLabels}}
+      </figure>
+    </a>
+    <div class="productitem--info">
+      {{itemSwatch}}
+      {{emphasizePrice}}
+      <h2 class="productitem--title">
+        <a href="{{itemUrl}}" data-product-page-link>{{itemTitle}}</a>
+      </h2>
+      {{itemVendor}}
+      {{noEmphasizePrice}}
+      {{itemReviews}}
+      {{itemDescription}}
+    </div>
+    {{itemActions}}
+  </div>
+  {{itemQuickShopSettings}}
+</li>
+{% endraw %}
+
+{%- when 'previousActiveHtml' -%}
+<li class="pagination--previous">
+  <a class="pagination--item" href="[[itemUrl]]">
+    <span class="pagination--chevron-left" aria-hidden="true">
+      <svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6">
+        <g fill="currentColor" fill-rule="evenodd">
+          <polygon class="icon-chevron-down-left" points="4 5.371 7.668 1.606 6.665 .629 4 3.365" />
+          <polygon class="icon-chevron-down-right" points="4 3.365 1.335 .629 1.335 .629 .332 1.606 4 5.371" />
+        </g>
+      </svg>
+    </span>
+    {{ 'general.pagination.prev' | t }}
+  </a>
+</li>
+
+{%- when 'previousDisabledHtml' -%}
+
+{%- when 'nextActiveHtml' -%}
+<li class="pagination--next">
+  <a class="pagination--item" href="[[itemUrl]]">
+    {{ 'general.pagination.next' | t }}
+    <span class="pagination--chevron-right" aria-hidden="true">
+      <svg aria-hidden="true" focusable="false" role="presentation" xmlns="http://www.w3.org/2000/svg" width="8" height="6" viewBox="0 0 8 6">
+        <g fill="currentColor" fill-rule="evenodd">
+          <polygon class="icon-chevron-down-left" points="4 5.371 7.668 1.606 6.665 .629 4 3.365" />
+          <polygon class="icon-chevron-down-right" points="4 3.365 1.335 .629 1.335 .629 .332 1.606 4 5.371" />
+        </g>
+      </svg>
+    </span>
+
+  </a>
+</li>
+
+{%- when 'nextDisabledHtml' -%}
+
+{%- when 'pageItemHtml' -%}
+<li><a class="pagination--item" href="[[itemUrl]]">[[itemTitle]]</a></li>
+
+{%- when 'pageItemSelectedHtml' -%}
+<li><span class="boost-pfs-filter-pagination-active">[[itemTitle]]</span></li>
+
+{% when 'pageItemRemainHtml' %}
+<li class="pagination--ellipsis"><span class="pagination--item">[[itemTitle]]</span></li>
+
+{%- when 'paginateHtml' -%}
+<div class="pagination--container"><ul class="pagination--inner">[[previous]][[pageItems]][[next]]</ul></div>
+
+{%- when 'sortingHtml' -%}
+<select class=" form-field form-field-select" tabindex="0" >
+    [[sortingItems]]
+</select>
+
+<svg aria-hidden="true" focusable="false" role="presentation" width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-chevron-down">
+  <path class="icon-chevron-down-left" d="M4 4.5L7 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"></path>
+  <path class="icon-chevron-down-right" d="M4 4.5L1 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"></path>
+</svg>
+
+{%- when 'showLimitHtml' -%}
+<li>
+  <span class="utils-showby-title">{{ 'product_grid.show_per_page.title' | t }}</span>
+</li>
+[[showLimitItems]]
+
+{%- endcase -%}
+{%- endcapture -%}
+
+{%- assign str = '}}' -%}
+{{- boost_pfs_layout | strip | strip_newlines | json | replace: '[[', '{{' | replace: ']]', str -}}

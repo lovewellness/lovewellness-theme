@@ -1,0 +1,32 @@
+{% comment %}begin rb_defer{% endcomment %}
+{% capture code %}
+{% comment %}START Solvvy{% endcomment %}
+<script type="text/javascript" src="https://cdn.solvvy.com/deflect/customization/lovewellness/solvvy.js" async></script>
+{% comment %} END Solvvy {% endcomment %}
+{% endcapture %}
+{% render 'renderbetter-code', defer: 'btf-feature', code: code %}
+{% comment %}end rb_defer{% endcomment %}
+
+<!-- START PebblePost PageViews Tracking -->
+{% comment %} <script>
+    window._pp = window._pp || [];
+    _pp.brid = "2697";
+    _pp.brcid = "{{customer.id}}";
+    _pp.sessionId = "";
+    _pp.email = "{{customer.email}}";
+    _pp.orderValue = "";
+    _pp.orderId = "";
+    _pp.offerCode = "";
+
+    (function() {
+    var ppjs = document.createElement('script');
+    ppjs.type = 'text/javascript';
+    ppjs.async = true;
+    ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + '//cdn.pbbl.co/r/' + _pp.brid + '.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ppjs, s);
+    })();
+</script> {% endcomment %}
+<!-- END PebblePost PageViews Tracking -->
+
+

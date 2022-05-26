@@ -1,0 +1,588 @@
+{% comment %}
+  @param product {Object}
+    The product object
+
+  @param layout {String}
+    The layout type
+
+  @param is_product_modal {Boolean}
+    Is the snippet being loaded in a Quick shop
+
+  @param is_featured_product {Boolean}
+    Is the snippet being loaded in a Featured product
+
+  @param onboarding {Boolean}
+    Is there onboarding content
+
+  @param show_dynamic_checkout_button {Boolean}
+    If true, show dynamic checkout button
+
+  @param select_first_available_variant {Boolean}
+    If true, select the first available variant
+
+  @param gallery_aspect_ratio {String}
+    This is the gallery aspect ratio, can be one of 'natural', 'short', 'square', 'long'
+
+  @param gallery_thumbnail_position {String}
+    This is the gallery thumbnail position, can be one of 'below', or 'left'
+
+  @param gallery_image_crop {Boolean}
+    Whether to crop images
+
+  @param gallery_hover_zoom {String}
+    This is the hover zoom setting, which is either 'disabled', 'separate', or 'replace'
+
+  @param gallery_click_to_zoom {String}
+    This is the click to zoom setting, which is either 'disabled', 'mobile', 'desktop', or 'always'
+{% endcomment %}
+
+{% assign onboarding = onboarding | default: false %}
+{% assign layout = layout | default: nil %}
+{% assign is_featured_product = is_featured_product | default: false %}
+{% assign key_ingredients = product.metafields.custom_fields.product_key_ingredients[0] | default: false %}
+
+{% comment %} START OrderGroove Price Manipulation {% endcomment %}
+{% if shop.permanent_domain == 'lwellness-staging.myshopify.com' %}
+  {% assign orderGrooveShopId = 'a797ee304d7511ec8251d2bef803fa0d' %}
+{% else %}
+  {% assign orderGrooveShopId = 'd941af3a17b011ebad4abc764e10b970' %}
+{% endif %}
+{% assign productVariantId = product.selected_or_first_available_variant.id %}
+{% assign originalPrice = product.selected_or_first_available_variant.price %}
+{% assign optedInByDefault = settings.enable_subscription_price %}
+
+{% comment %} START Custom Sale Price {% endcomment %}
+{% assign discountAmount = 0 %}
+{% assign discountedCustomSaleProductPrice = product.price %}
+{% if product.metafields.custom_fields["custom_sale_discount_amount"] != blank %}
+  {% assign discountAmount = product.metafields.custom_fields["custom_sale_discount_amount"] %}
+{% endif %}
+{% if discountAmount != 0 %}
+  {% assign discountedCustomSaleProductPrice = product.price | times: discountAmount %}
+{% endif %}
+{% comment %} END Custom Sale Price {% endcomment %}
+
+{% liquid
+  assign selected_variant = product.selected_variant
+
+  if product.variants.size == 1 or select_first_available_variant
+    assign selected_variant = product.selected_or_first_available_variant
+  endif
+%}
+
+{% assign compare_at_price = selected_variant.compare_at_price %}
+{% assign price = selected_variant.price %}
+{% assign sku = selected_variant.sku %}
+{% assign product_available = product.available %}
+
+{% comment %} Subscription Default {% endcomment %}
+{% assign has_subscription_collection = false %}
+{% for collection in product.collections %}
+    {% if collection.handle == "subscription-default" %}
+        {% assign has_subscription_collection = true %}
+    {% endif %}
+{% endfor %}
+
+{% comment %} Price Manipulator for Microdata Schema for Google {% endcomment %}
+{% assign meta_data_price = selected_variant.price | money_without_currency | remove: ',' %}
+{% assign meta_data_discount_amount = 1 %}
+
+{% if optedInByDefault %}
+  {% if has_subscription_collection == true %}
+    {% if product.tags contains 'OGFullStore' %}
+      {% assign meta_data_discount_amount = 0.70 %}
+    {% endif %}
+    {% if product.tags contains 'OGMultis' %}
+      {% assign meta_data_discount_amount = 0.70 %}
+    {% endif %}
+    {% comment %} Discount for 90 Day Supply on Bye Bye Bloat {% endcomment %}
+    {% if product.tags contains 'OGJumbo' and selected_variant.options contains '90 Day Supply' %}
+      {% assign meta_data_discount_amount = 0.80 %}
+    {% endif %}
+  {% endif %}
+
+  {% assign meta_data_price = selected_variant.price | times: meta_data_discount_amount | money_without_currency | remove: ',' %}
+{% endif %}
+{% comment %} Price Manipulator for Microdata Schema for Google {% endcomment %}
+
+{% comment %}For a potential divider in the product.description we need to split the content{% endcomment %}
+{% assign readmore_split = product.description | split: '<!-- more -->' %}
+
+{% if onboarding %}
+  {% assign compare_at_price = 2999 %}
+  {% assign price = 1999 %}
+{% endif %}
+
+{% assign on_sale = false %}
+{% if compare_at_price > price %}
+  {% assign on_sale = true %}
+{% endif %}
+
+{% assign consistent_saved = false %}
+{% capture consistent_savings %}
+  {%
+    render 'consistent-savings',
+    variants: product.variants,
+    on_sale: on_sale
+  %}
+{% endcapture %}
+{% if consistent_savings contains 'true' %}
+  {% assign consistent_saved = true %}
+{% endif %}
+
+{%- capture share_buttons -%}
+  {% assign social_image = false %}
+  {% if product.featured_image %}
+    {% assign social_image = product.featured_image | img_url: '1024x' %}
+  {% endif %}
+  {% assign social_url = shop.url | append: product.url %}
+  {%-
+    render 'share-buttons',
+    snippet_title: 'general.share_buttons.title',
+    social_image: social_image,
+    social_title: product.title,
+    social_url: social_url
+  -%}
+{%- endcapture  -%}
+
+<article class="product--outer">
+  {%
+    render 'product-gallery',
+    product: product,
+    select_first_available_variant: select_first_available_variant,
+    aspect_ratio: gallery_aspect_ratio,
+    thumbnail_position: gallery_thumbnail_position,
+    image_crop: gallery_image_crop,
+    gallery_click_to_zoom: gallery_click_to_zoom,
+    gallery_hover_zoom: gallery_hover_zoom
+  %}
+
+  <div class="product-main">
+    <div class="product-details" data-product-details>
+      {% for block in section.blocks %}
+        <div class="product-details__block" {{ block.shopify_attributes }}>
+          {% case block.type %}
+            {% when 'title' %}
+              {% if is_product_modal %}
+                <h2 class="product-title">
+                  <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
+                </h2>
+              {% else %}
+                {% if template == 'index' %}
+                  <h2 class="product-title">
+                {% else %}
+                  <h1 class="product-title">
+                {% endif %}
+                  {% unless onboarding %}
+                    {{ product.title }}
+                  {% else %}
+                    {{ 'onboarding.product.title' | t }}
+                  {% endunless %}
+                {% if template == 'index' %}
+                  </h2>
+                {% else %}
+                  </h1>
+                {% endif %}
+              {% endif %}
+            {% when 'vendor' %}
+              {% if product.vendor != blank or onboarding %}
+                <div class="product-vendor">
+                  {% unless onboarding %}
+                    {%- capture vendor_link -%}
+                      {{ product.vendor | link_to_vendor }}
+                    {%- endcapture -%}
+                    {{ 'product.general.by_vendor_html' | t: vendor_link: vendor_link }}
+                  {% else %}
+                    {{ 'onboarding.product.by_vendor' | t }}
+                  {% endunless %}
+                </div>
+              {% endif %}
+            {% when 'price' %}
+              {% if settings.product_ratings_reviews %}
+                <div class="product-ratings">
+                  <span class="shopify-product-reviews-badge" data-id="{{ product.id }}">
+                    <span class="spr-badge">
+                      <span class="spr-starrating spr-badge-starrating">
+                        <i class="spr-icon spr-icon-star-empty"></i>
+                        <i class="spr-icon spr-icon-star-empty"></i>
+                        <i class="spr-icon spr-icon-star-empty"></i>
+                        <i class="spr-icon spr-icon-star-empty"></i>
+                        <i class="spr-icon spr-icon-star-empty"></i>
+                      </span>
+                    </span>
+                  </span>
+                </div>
+              {% endif %}
+              <div
+                class="product-pricing"
+                aria-live="polite"
+                data-product-pricing
+              >
+                {%
+                  render 'product-badge',
+                  class_root: 'product',
+                  product: product,
+                  product_available: product_available,
+                  on_sale: on_sale,
+                  price: price,
+                  compare_at_price: compare_at_price,
+                  show_saved: true,
+                  include_range: false,
+                  selected_variant: selected_variant,
+                %}
+
+                {%
+                  render 'product-price',
+                  product: product,
+                  class_root: 'product',
+                  price: price,
+                  price_varies: false,
+                  compare_at_price: compare_at_price,
+                  compare_at_price_varies: false,
+                  on_sale: on_sale,
+                  emphasize_price: false,
+                  show_original: true,
+                  show_range: false,
+                  include_unit_price: true,
+                  include_tax_line: true,
+                  include_hidden_price: true,
+                  meta_data_price: meta_data_price
+                %}
+
+                <form data-payment-terms-target style="display: none;"></form>
+              </div>
+
+            {% when 'sku' %}
+              {% unless onboarding %}
+                <div
+                  class="
+                    product-sku
+                    {% if sku == empty %}product-sku--empty{% endif %}
+                  "
+                >
+                  {{ 'product.general.sku_html' | t: sku: sku | strip_newlines }}
+                </div>
+              {% endunless %}
+
+            {% when 'description' %}
+              {% if readmore_split[0] != blank %}
+                <div class="product-description rte" data-product-description>
+                  {{ readmore_split[0] }}
+                </div>
+              {% endif %}
+            {% when 'form' %}
+              <div
+                class="product-form--regular"
+                data-product-form-regular
+              >
+                <div data-product-form-area>
+                  {% if is_product_modal %}
+                    <div data-product-quickshop-message class="product-message--container"></div>
+                  {% endif %}
+
+                  {% unless onboarding or product.tags contains 'gift' %}
+                    {%
+                      render 'product-form',
+                      product: product,
+                      show_dynamic_checkout_button: show_dynamic_checkout_button,
+                      selected_variant: selected_variant,
+                      is_product_modal: is_product_modal,
+                    %}
+                  {% endunless %}
+                </div>
+              </div>
+            {% when 'text' %}
+              <div class="product-text">
+                {{ block.settings.text }}
+              </div>
+            {% when 'share' %}
+              <div class="product-share">
+                {{ share_buttons | strip_newlines }}
+              </div>
+            {% when '@app' %}
+              <div class="product-app">
+                {% render block %}
+              </div>
+            {% when 'view-product-link' %}
+              <a
+                class="product-link"
+                href="{{ product.url | within: collection }}"
+                data-product-details-link
+              >
+                {{ block.settings.text | escape }}
+              </a>
+          {% endcase %}
+        </div>
+      {% endfor %}
+
+      {% if key_ingredients.enable_product_key_ingredients == 1 %}
+        <div class="product-ingredients">
+          <h5 class="product-ingredients__title">
+            {{ key_ingredients.module_title }}
+          </h5>
+          <div class="product-ingredients__container">
+            {% for ingredient in key_ingredients.key_ingredient %}
+              <div class="product-ingredients__ingredient">
+                <img class="product-ingredients__ingredient-image" src="{{ingredient.ingredient_image}}" alt="{{ingredient.ingredient_name}}" lazy>
+                <p class="product-ingredients__ingredient-name">
+                  {{ingredient.ingredient_name}}
+                </p>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if layout == 'layout--three-col' or is_featured_product == true %}
+        <div class="product-form--regular" data-product-form-regular>
+          <div data-product-form-area>
+            {% if is_product_modal %}
+              <div data-product-quickshop-message class="product-message--container"></div>
+            {% endif %}
+
+            {% unless onboarding or product.tags contains 'gift' %}
+              {%
+                render 'product-form',
+                product: product,
+                show_dynamic_checkout_button: show_dynamic_checkout_button,
+                selected_variant: selected_variant,
+                is_product_modal: is_product_modal,
+              %}
+            {% endunless %}
+
+            {% if is_product_modal == false %}
+              {{ share_buttons | strip_newlines }}
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    
+      <div class="product-variants hidden">
+        {% if product.variants.size > 1 %}
+        {% for variant in product.variants %}
+          <span data-product-price="{{variant.price}}" data-product-title="{{variant.title}}" data-product-id="{{variant.id}}" data-discount-price="{% if variant.metafields.custom_fields["custom_sale_discount_amount"] != blank %}{{ variant.metafields.custom_fields["custom_sale_discount_amount"] }}{% else %}{{ variant.price }}{% endif %}"> </span>
+        {% endfor %}
+        {% else %}
+          <span id="soloVariant" data-product-price="{{ product.first_available_variant.price }}" data-product-id="{{ product.first_available_variant.id }}" data-discount-price="{% if product.metafields.custom_fields["custom_sale_discount_amount"] != blank %}{{ product.metafields.custom_fields["custom_sale_discount_amount"] }}{% else %}{{ product.price }}{% endif %}"> </span>
+        {% endif %}
+      </div>
+
+  </div>
+
+  {% if layout == 'layout--three-col' %}
+    <div class="product-form--alt" data-product-form-alt></div>
+  {% endif %}
+</article>
+
+{% unless is_product_modal == true %}
+  <script type="text/javascript">
+    var _learnq = _learnq || [];
+    var item = {
+      Name: {{ product.title|json }},
+      ProductID: {{ product.id|json }},
+      Categories: {{ product.collections|map:'title'|json }},
+      ImageURL: "https:{{ product.featured_image.src|img_url:'grande' }}",
+      URL: "{{ shop.secure_url }}{{ product.url }}",
+      Brand: {{ product.vendor|json }},
+      Price: {{ product.price|money|json }},
+      CompareAtPrice: {{ product.compare_at_price_max|money|json }}
+    };
+    _learnq.push(['track', 'Viewed Product', item]);
+    _learnq.push(['trackViewedItem', {
+      Title: item.Name,
+      ItemId: item.ProductID,
+      Categories: item.Categories,
+      ImageUrl: item.ImageURL,
+      Url: item.URL,
+      Metadata: {
+        Brand: item.Brand,
+        Price: item.Price,
+        CompareAtPrice: item.CompareAtPrice
+      }
+    }]);
+  </script>
+{% endunless %}
+
+{% if readmore_split[1] != blank and is_featured_product != true and is_product_modal != true %}
+  <div class="product-readmore rte" data-product-readmore>
+    {{ readmore_split[1] }}
+  </div>
+{% endif %}
+
+
+<script type="text/javascript">
+  
+  let productId = "{{ productVariantId }}";
+  let productPrice =  {{ originalPrice }};
+  let discountPrice = {{ discountedCustomSaleProductPrice }};
+  let optedIn = {{ optedInByDefault }};
+  const variantInput = document.querySelector('[data-variants]');
+
+  async function subscriptionProductDetails(productId) {
+    const url = `https://om.ordergroove.com/offer/{{ orderGrooveShopId }}/pdp?session_id={{ orderGrooveShopId }}&p=["${productId}"]&module_view=["regular"]`;
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+  }
+
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  });
+
+  function updatePriceData(){
+    if(document.getElementById('soloVariant') !== null) {
+      productId = document.querySelector('#soloVariant').dataset.productId;
+      productPrice = document.querySelector('#soloVariant').dataset.productPrice;
+      discountPrice = document.querySelector('#soloVariant').dataset.discountPrice;
+    }
+    else {
+      var currentVariant = document.getElementById("data-variant-option-0");
+      let selectecVariant =  document.querySelectorAll(`[data-product-title='${currentVariant.value}']`);
+      productId = selectecVariant[0].dataset.productId;
+      productPrice = selectecVariant[0].dataset.productPrice;
+      discountPrice = selectecVariant[0].dataset.discountPrice;
+    }
+  }
+
+  function updatePrice(price) {
+    const formattedPrice = formatter.format(price / 100);
+    jQuery('.product-details .price__current span.money').text(formattedPrice);
+  }
+
+  /* Helper: Calculate price of product when are known shopify price, discount amount and the discount type */
+  function calculateProductSubscriptionPrice(onetimeProductPrice, discountAmount, discountType) {
+    onetimeProductPrice = parseInt(onetimeProductPrice);
+    let subscriptionProductPrice = 0;
+    if (discountType === 'Discount Percent') {
+      subscriptionProductPrice = onetimeProductPrice - onetimeProductPrice * (discountAmount / 100);
+    } else {
+      subscriptionProductPrice = onetimeProductPrice - discountAmount;
+    }
+    return subscriptionProductPrice;
+  }
+
+  /**
+   * As the customer is opting into and out of subscription
+   * change the display of the price so that a customer can
+   * see the regular or discounted price depending on their selection.
+   */
+  function handleOptinChange (changedState) {
+    updatePriceData();
+
+    const productVariantId = `${productId}`;
+    const onetimeProductPrice = `${productPrice}`;
+    const normalPrice = `${discountPrice}`;
+
+    try {
+      if (productId != changedState.productId) {
+        return;
+      }
+
+      if (changedState.optedIn) {
+        fetchSubscriptionData();
+      } else {
+        updatePrice(normalPrice);
+      }
+    }
+    catch(e) {
+      console.log(e.message);
+    }
+  }
+
+
+  async function fetchSubscriptionData() {
+    OG.addOptinChangedCallback(handleOptinChange);
+    updatePriceData();
+    
+    const productVariantId = `${productId}`;
+    const onetimeProductPrice = `${productPrice}`;
+    const normalPrice = `${discountPrice}`;
+
+    const orderGrooveData = await subscriptionProductDetails(productId);
+    const { incentives_display, incentives } = orderGrooveData;
+
+    // Check to see if a product is eligible for a subscription discount
+    const productIsEligible = incentives[productVariantId] && incentives[productVariantId].hasOwnProperty('ongoing');
+    
+    if(productIsEligible) {
+      const currentProductIncentives = incentives[productVariantId].ongoing;
+      // get discount % from ordergroove response
+      let discountAmount = 0;
+      let discountType = 'Discount Percent';
+      currentProductIncentives.forEach(incentive => {
+        const {field, object, type, value } = incentives_display[incentive];
+        if(field === 'total_price') {
+            discountAmount = value;
+            discountType = type;
+        }
+      });
+      // Calculate the subscription price
+      const subscriptionProductPrice = calculateProductSubscriptionPrice(onetimeProductPrice, discountAmount, discountType);
+      updatePrice(subscriptionProductPrice);
+    } else {
+      // If a product is not subscription-eligible, display its original price
+      updatePrice(normalPrice);
+    }
+  }
+
+  // On page load, check if a product is eligible for a subscription discount
+  async function checkForOffers() {
+    updatePriceData();
+
+    const productVariantId = `${productId}`;
+    const onetimeProductPrice = `${productPrice}`;
+    const normalPrice = `${discountPrice}`;
+    const orderGrooveData = await subscriptionProductDetails(productId);
+    const { incentives_display, incentives } = orderGrooveData;
+
+    // If a product has offers, select the default opt in or opt out, depending on the theme setting 
+    if(incentives[productVariantId] && incentives[productVariantId].hasOwnProperty('ongoing')){
+      {% if optedInByDefault %}
+        // Opt in
+        document.querySelector('og-offer[location="pdp"] > og-when > p:nth-child(2) > og-optin-button').click();
+      {% else %}
+        // Opt out
+        document.querySelector('og-offer[location="pdp"] > og-when > p:nth-child(1) > og-optout-button').click();
+      {% endif %}
+    }
+  }
+
+  // Check to see if a product has variants/options
+  // If it does, fetch subscription price again on every variant change
+  if(document.getElementById('data-variant-option-0') !== null) {
+    document.getElementById('data-variant-option-0').addEventListener('change', function() {
+      fetchSubscriptionData();
+    });
+  };
+
+//   document.addEventListener("DOMContentLoaded", fetchSubscriptionData());
+  
+  //document.addEventListener("DOMContentLoaded", checkForOffers);
+  // On variant change, update the OG widget to select opt in or opt out based on theme settings
+  variantInput.addEventListener('change', checkForOffers);
+  
+  /*document.addEventListener("DOMContentLoaded", function() {
+  	document.querySelectorAll('og-optout-button')[0].dispatchEvent(new Event('click'));
+  });*/
+
+  document.addEventListener('click', function (event) {
+    
+    var button_optout = document.querySelector('og-optout-button');
+    var button_optin  = document.querySelector('og-optin-button');
+ 
+    // display subscription price
+    if ( button_optin.contains(event.target) ) {
+		fetchSubscriptionData();
+    }
+    
+    // display purchase price
+    if ( button_optout.contains(event.target) ) {
+		updatePrice(productPrice);
+    }
+
+  }, false);
+
+</script>

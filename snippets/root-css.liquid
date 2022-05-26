@@ -1,0 +1,138 @@
+<style>
+  :root {
+    --max-width: {{ settings.layout_max_width | append: 'px' }};
+
+    --color-background-base: {{ settings.color_background.red }}, {{ settings.color_background.green }}, {{ settings.color_background.blue }};
+    --color-background-alpha-0: {{ settings.color_background | color_modify: 'alpha', 0 }};
+    --color-background-light-base: 255, 255, 255;
+
+    --color-border-base: 128, 128, 128;
+
+    --color-overlay-base: {{ settings.color_overlay.red }}, {{ settings.color_overlay.green }}, {{ settings.color_overlay.blue }};
+    --overlay-opacity: {{ settings.overlay_opacity | times: 0.01 }};
+
+    --color-headings-base: {{ settings.color_headings.red }}, {{ settings.color_headings.green }}, {{ settings.color_headings.blue }};
+    --color-text-base: {{ settings.color_text.red }}, {{ settings.color_text.green }}, {{ settings.color_text.blue }};
+
+    --color-text-hover-base: {{ settings.color_text_hover.red }}, {{ settings.color_text_hover.green }}, {{ settings.color_text_hover.blue }};
+    --color-text-light-base: {{ settings.color_text_light.red }}, {{ settings.color_text_light.green }}, {{ settings.color_text_light.blue }};
+    --color-links-base: {{ settings.color_links.red }}, {{ settings.color_links.green }}, {{ settings.color_links.blue }};
+    --color-link-hover-base: {{ settings.color_link_hover.red }}, {{ settings.color_link_hover.green }}, {{ settings.color_link_hover.blue }};
+
+    --color-button-text-base: {{ settings.color_button_text.red }}, {{ settings.color_button_text.green }}, {{ settings.color_button_text.blue }};
+    --color-button-background-base: {{ settings.color_button_background.red }}, {{ settings.color_button_background.green }}, {{ settings.color_button_background.blue }};
+    --color-button-background-focus-base: {{ settings.color_button_background_focus.red }}, {{ settings.color_button_background_focus.green }}, {{ settings.color_button_background_focus.blue }};
+
+    --color-button-secondary-text-base: {{ settings.color_button_secondary_text.red }}, {{ settings.color_button_secondary_text.green }}, {{ settings.color_button_secondary_text.blue }};
+    --color-button-secondary-background-base: {{ settings.color_button_secondary_background.red }}, {{ settings.color_button_secondary_background.green }}, {{ settings.color_button_secondary_background.blue }};
+    --color-button-secondary-border-base: {{ settings.color_button_secondary_border.red }}, {{ settings.color_button_secondary_border.green }}, {{ settings.color_button_secondary_border.blue }};
+
+    --color-header-text-base: {{ settings.color_header_text.red }}, {{ settings.color_header_text.green }}, {{ settings.color_header_text.blue }};
+    
+    --color-input-text-base: {{ settings.color_input_text.red }}, {{ settings.color_input_text.green }}, {{ settings.color_input_text.blue }};
+    --color-input-background-base: {{ settings.color_input_background.red }}, {{ settings.color_input_background.green }}, {{ settings.color_input_background.blue }};
+    --color-input-border-base: {{ settings.color_input_border.red }}, {{ settings.color_input_border.green }}, {{ settings.color_input_border.blue }};
+
+    --color-product-sale-accent-base: {{ settings.color_product_sale_accent.red }}, {{ settings.color_product_sale_accent.green }}, {{ settings.color_product_sale_accent.blue }};
+    --color-product-review-star-base: {{ settings.color_product_review_star.red }}, {{ settings.color_product_review_star.green }}, {{ settings.color_product_review_star.blue }};
+
+    --color-featured-post-foreground-base: 62, 80, 85;
+
+    --color-footer-text-base: {{ settings.color_header_text.red }}, {{ settings.color_header_text.green }}, {{ settings.color_header_text.blue }};
+    --color-footer-background-base: {{ settings.color_footer_background.red }}, {{ settings.color_footer_background.green }}, {{ settings.color_footer_background.blue }};
+    --color-footer-link-base: {{ settings.color_header_text.red }}, {{ settings.color_header_text.green }}, {{ settings.color_header_text.blue }};
+
+    --font-heading-spacing: {{ settings.type_heading_spacing | divided_by: 100.0 | append: 'em' }};
+    --font-menu-spacing: {{ settings.type_menu_spacing | divided_by: 100.0 | append: 'em' }};
+    --font-button-spacing: {{ settings.type_button_spacing | divided_by: 100.0 | append: 'em' }};
+    --font-section-spacing: {{ settings.type_section_spacing | divided_by: 100.0 | append: 'em' }};
+
+    --swatches-product-card-size: {{ settings.swatches_product_card_size }};
+    --swatches-product-page-size: {{ settings.swatches_product_page_size }};
+    --swatches-shape: {{ settings.swatches_shape }};
+
+    --base-font-size: {{ settings.type_size_base }};
+    --type-heading-size: {{ settings.type_heading_size }};
+
+    --heading-capitalize: {{ settings.type_heading_capitalize }};
+
+    --font_body_size_small : calc(var(--base-font-size) - 1);
+    --font_body_size_smaller : calc(var(--base-font-size) - 2);
+    --font_body_size_smallest : calc(var(--base-font-size) - 3);
+    --font_heading_large : 2.125rem;
+    --font_heading_medium : 1.875rem;
+    --font_h1_size : 1.75rem;
+    --font_h2_size : 1.625rem;
+    --font_h3_size : 1.5rem;
+    --font_h4_size : 1.25rem;
+    --font_h5_size : 1.125rem;
+    --font_h6_size : var(--base-font-size);
+
+    --font-size-heading-large: 2.125rem;
+    --font-size-heading-medium: 1.875rem;
+    --font-size-heading-1: 2.3625rem;
+    --font-size-heading-2: 2.19375rem;
+    --font-size-heading-3: 2.025rem;
+    --font-size-heading-4: 1.6875rem;
+    --font-size-heading-5: 1.265625rem;
+    --font-size-heading-6: 1.265625rem;
+    --font-size-body-larger: 1.546875rem;
+    --font-size-body-large: 1.40625rem;
+    --font-size-body-medium: 1.265625rem;
+    --font-size-body: 1.125rem;
+    --font-size-body-small: 1.0546875rem;
+    --font-size-body-smaller: 0.984375rem;
+    --font-size-body-smallest: 0.9140625rem;
+    --font-size-body-tiny: 0.84375rem;
+    --font-size-button-small: 0.8125rem;
+    --font-size-button-medium: 1.0rem;
+    --font-size-button-large: 1.203125rem;
+    --font-size-button-x-large: 1.3515625rem;
+    --font-size-menu-large: 1.1953125rem;
+    --font-size-menu: 1.125rem;
+    --font-size-input: 1.125rem;
+    --font-size-section-heading: 1.6875rem;
+    --font-size-menu-body-medium: 1.265625rem;
+    --font-size-menu-body-small: 1.0546875rem;
+    --font-size-heading-body-small: 1.0546875rem;
+    --font-size-heading-body-smaller: 0.984375rem;
+    --font-size-heading-slideshow: 2.390625rem;
+  }
+  @media screen and (max-width: 719px) {
+    :root {
+      --font-size-heading-large: 2.390625rem;
+    }
+  }
+  @media screen and (max-width: 859px) {
+    :root {
+      --font-size-heading-medium: 2.109375rem;
+      --font-size-heading-1: 1.96875rem;
+      --font-size-heading-2: 1.828125rem;
+      --font-size-heading-3: 1.6875rem;
+      --font-size-heading-4: 1.40625rem;
+      --font-size-heading-5: 1.0546875rem;
+      --font-size-heading-6: 1.0546875rem;
+      --font-size-body-larger: 1.2890625rem;
+      --font-size-body-large: 1.171875rem;
+      --font-size-body-medium: 1.0546875rem;
+      --font-size-body: 0.9375rem;
+      --font-size-body-small: 0.87890625rem;
+      --font-size-body-smaller: 0.8203125rem;
+      --font-size-body-smallest: 0.76171875rem;
+      --font-size-body-tiny: 0.703125rem;
+      --font-size-button-small: 0.8125rem;
+      --font-size-button-medium: 0.875rem;
+      --font-size-button-large: 0.9921875rem;
+      --font-size-button-x-large: 1.16796875rem;
+      --font-size-menu-large: 0.93359375rem;
+      --font-size-menu: 0.9375rem;
+      --font-size-input: 0.9375rem;
+      --font-size-section-heading: 1.40625rem;
+      --font-size-menu-body-medium: 1.0546875rem;
+      --font-size-menu-body-small: 0.87890625rem;
+      --font-size-heading-body-small: 0.87890625rem;
+      --font-size-heading-body-smaller: 0.8203125rem;
+      --font-size-heading-slideshow: 2.390625rem;
+    }
+  }
+</style>

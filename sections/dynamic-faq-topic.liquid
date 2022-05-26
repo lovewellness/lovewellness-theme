@@ -1,0 +1,182 @@
+{%- liquid
+  if section.settings.dynamic == true
+    if section.settings.product_item != blank
+      assign productData = section.settings.product_item
+    elsif section.settings.page_item != blank
+      assign productData = section.settings.page_item
+    elsif template contains 'product'
+      assign productData = product
+    elsif template contains 'page'
+      assign productData = page
+    endif
+  endif
+-%}
+
+<div 
+  class="faq-topic {% if section.settings.tab != blank and template contains 'faq' %}faq-topic--page{% endif %} section-{{ section.id }}" 
+  {% if section.settings.tab != blank and template contains 'faq' %}data-tab="{{section.settings.tab | handleize}}"{% endif %}
+>
+  <div class="faq-content">
+    <a id="faq-section-{{ section.settings.title  | handleize }}"></a>
+    {% if section.settings.title != blank %}<h2 class="faq-content__header">{{ section.settings.title}}</h2>{% endif %}
+    {% unless section.settings.dynamic == true %}
+      {% for block in section.blocks %}
+        {% if block.settings.question != blank %}
+          <div class="faq-item {% if section.settings.separator %}faq-item--seperator{% endif %}">
+            <div class="faq-item__block">
+              <input id="collapsible-{{section.settings.title | handleize}}-{{forloop.index}}" class="toggle" type="checkbox">
+              <i class="chevron"></i>
+              <label 
+                tabindex="0" 
+                aria-expanded="false" 
+                for="collapsible-{{section.settings.title | handleize}}-{{forloop.index}}" 
+                class="lbl-toggle faq-item__question"
+              >
+                {{ block.settings.question}}
+              </label>
+              {% if block.settings.answer != blank %}
+                <div 
+                  id="collapsible-{{section.settings.title | handleize}}-answer-{{forloop.index}}" 
+                  class="faq-item__answer"
+                >
+                  <div class="solvvy-solution">{{ block.settings.answer}}</div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endunless %}
+
+    {% if productData.handle != blank %}
+      {% assign separator = "|###|" %}
+      {% assign question_array = productData.metafields.custom_fields["question"] | split: separator %}
+      {% assign answer_array = productData.metafields.custom_fields["answer"] | split: separator %}
+      {% assign fc_keys = productData.metafields.custom_fields["faq"] | split: "," %}
+
+      {% for i in fc_keys %}
+        {% assign index = i | plus: 0 %}
+        <div class="faq-item__item {% if section.settings.separator %}faq-item--seperator{% endif %}">
+          <div class="faq-item__block">
+            <input id="collapsible-{{section.settings.title | handleize}}-{{index}}" class="toggle" type="checkbox">
+            <i class="chevron"></i>
+            <label tabindex="0" aria-expanded="false" for="collapsible-{{section.settings.title | handleize}}-{{index}}" class="lbl-toggle faq-item__question">{{ question_array[index]}}</label>
+            {% if answer_array[index] != blank %}
+              <div 
+                id="collapsible-{{section.settings.title | handleize}}-answer-{{index}}" 
+                class="faq-item__answer"
+              >
+                <div class="solvvy-solution">
+                  {{ answer_array[index]}}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    let myLabels = document.querySelectorAll('.section-{{ section.id }} .toggle');
+
+    Array.from(myLabels).forEach(label => {
+      label.addEventListener('keydown', e => {
+        // 32 === spacebar
+        // 13 === enter
+        if (e.which === 32 || e.which === 13) {
+          e.preventDefault();
+          label.click();
+        };
+      });
+
+      label.addEventListener('click', e => {
+        if (label.getAttribute('aria-expanded') === 'false') {
+          label.setAttribute('aria-expanded', 'true');
+        } else {
+          label.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Topic",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Topic"
+    },
+    {
+      "type": "checkbox",
+      "id": "separator",
+      "label": "Show separator",
+      "info": "If checked, a separator will be shown below every FAQ question.",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "dynamic",
+      "label": "Dynamic FAQs",
+      "info": "If checked, the FAQs will be dynamically generated from the FAQs in custom meta fields of the current page/product or the product/page selected below!"
+    },
+    {
+      "type": "product",
+      "id": "product_item",
+      "label": "Product",
+      "info": "Select a product to pull from its FAQ custom fields. If none is selected, the FAQs will be pulled from the current page/product."
+    },
+    {
+      "type": "page",
+      "id": "page_item",
+      "label": "Page",
+      "info": "Select a page to pull from its FAQs custom fields. If no page is selected, the FAQs will be pulled from the product selected above."
+    },
+    {
+      "type":"text",
+      "id":"tab",
+      "label":"FAQ Tab",
+      "info": "For FAQ Page Only. Must match exactly to tab in settings of the FAQ page."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "FAQ Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "FAQ Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "category": "Store information",
+      "name": "FAQ Topic",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Question 1",
+            "answer": "<p>Answer 1</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

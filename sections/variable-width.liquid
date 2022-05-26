@@ -1,0 +1,67 @@
+<article class="site-page {{ section.settings.padding_top }} {{ section.settings.padding_bottom }}" data-template-page>
+  <header class="page-masthead">
+    <h1 class="page-title">
+      {{ page.title }}
+    </h1>
+  </header>
+
+  {% if page.content != blank %}
+    <div class="page-content rte {{ section.settings.container_width }}">
+      {{ page.content }}
+    </div>
+  {% endif %}
+</article>
+
+
+{% schema %}
+{
+  "name": "Variable Width",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Design Settings"
+    },
+    {
+      "type":"select",
+      "id":"container_width",
+      "label":"Container Width",
+      "options":[
+        {"value":"page-content--full", "label":"Full Width"},
+        {"value":"page-content--default", "label":"Contained"},
+        {"value":"page-content--slim", "label":"Contained Slim"}
+      ],
+      "default":"page-content--full"
+    },
+    {
+      "type":"select",
+      "id":"padding_top",
+      "label":"Container Padding Top",
+      "options":[
+        {"label":"None", "value":"padding-top--none"},
+        {"label":"Tight", "value":"padded-top--tight"},
+        {"label":"Default", "value":"padded-top--default"},
+        {"label":"Large", "value":"padded-top--large"}
+      ],
+      "default":"padded-top--default"
+    },
+    {
+      "type":"select",
+      "id":"padding_bottom",
+      "label":"Container Padding Bottom",
+      "options":[
+        {"label":"None", "value":"padded-bottom--none"},
+        {"label":"Tight", "value":"padded-bottom--tight"},
+        {"label":"Default", "value":"padded-bottom--default"},
+        {"label":"Large", "value":"padded-bottom--large"}
+      ],
+      "default":"padded-bottom--default"
+    }
+  ],
+  "presets": [{
+    "name": "Variant Width",
+    "category": "Content"
+  }],
+  "templates": ["page"]
+
+}
+{% endschema %}

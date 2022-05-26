@@ -1,0 +1,109 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-cta">
+</script>
+
+<style>
+  .section-{{ section.id }} {
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+</style>
+
+<section class="cta-section section-{{ section.id }} cta--container cta--{{ section.settings.width }} cta--{{ section.settings.alignment }}">
+  <a href="{{ section.settings.url }}" class="button-primary" {% if section.settings.new_tab %} target="_blank" {% endif %}>{{ section.settings.buttonText }}</a>
+</section>
+
+{% schema %}
+{
+  "name": "Call to Action",
+  "class": "cta--section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "buttonText",
+      "label": "Button Content"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "new_tab",
+      "label": "Open on new tab"
+    },
+    {
+      "type": "header",
+      "content": "Spacing & Alignment"
+    },
+    {
+      "id": "alignment",
+      "type": "select",
+      "label": "Button Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "id": "width",
+      "type": "select",
+      "label": "Section width",
+      "options": [
+        {
+          "value": "regular",
+          "label": "Regular"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        },
+        {
+          "value": "full-width",
+          "label": "Full width"
+        }
+      ],
+      "default": "regular"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Margin Top",
+      "default": 30,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Margin Bottom",
+      "default": 10,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    }
+  ],
+  "presets": [
+    {
+      "name": "Call To Action",
+      "category": "Text",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

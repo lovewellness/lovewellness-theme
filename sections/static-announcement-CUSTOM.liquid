@@ -1,0 +1,164 @@
+{% liquid
+  assign enable_autoplay = section.settings.enable_autoplay
+  assign autoplay_interval = section.settings.autoplay_duration
+  assign show_pagination = true
+  assign mobile_navigation_adjust = true
+%}
+
+<script
+  type="application/json"
+  data-section-type="pxs-slideshow"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "enable_autoplay": {{ enable_autoplay | json }},
+    "autoplay_interval": {{ autoplay_interval | json }},
+    "mobile_navigation_adjust": {{ mobile_navigation_adjust | json }},
+    "transition_fade": {{ transition_fade | json }},
+    "slide_attraction": {{ slide_attraction | json }},
+    "slide_friction": {{ slide_friction | json }},
+    "next_text": {{ 'sections.slideshow.next_slide' | t | json }},
+    "previous_text": {{ 'sections.slideshow.previous_slide' | t | json }}
+  }
+</script>
+
+{% assign show_everywhere = false %}
+{% assign homepage_only = false %}
+
+{% if
+  section.settings.show_announcement and
+  section.settings.homepage_announcement == false
+%}
+  {% assign show_everywhere = true %}
+{% endif %}
+
+{% if
+  section.settings.show_announcement and
+  section.settings.homepage_announcement and
+  template == 'index'
+%}
+  {% assign homepage_only = true %}
+{% endif %}
+
+{% if show_everywhere or homepage_only %}
+  {% if section.blocks.size > 0 %}
+	<section class="slideshow announcement-bar announcement-bar-CUSTOM" style="margin-bottom: -1px;"
+      aria-label="Announcement Slider"
+      data-autoplay="{% if enable_autoplay %}true{% else %}false{% endif %}"
+      data-autoplay-interval="{{ autoplay_interval }}"
+    >
+      <div
+        class="slideshow__wrapper {{ wrapper_classes }}"
+        data-slideshow-wrapper
+      >
+		{% for block in section.blocks %}
+      		<div class="announcement-slide" style="
+              color: {{ block.settings.announcement_color }};
+              background: {{ block.settings.announcement_background }};
+    		" data-text-color="{{ block.settings.announcement_color }}"
+            tabindex="-1"
+            data-slideshow-slide
+            data-slide-index="{{ block_index }}"
+            {{ block.shopify_attributes }}>
+              {% if block.settings.announcement_link != blank %}
+                <a
+                  class="announcement-bar-link"
+                  href="{{ block.settings.announcement_link }}"
+                  ></a>
+              {% endif %}
+              {% if block.settings.announcement_text != blank %}
+                <div class="announcement-bar-text">
+                  {{ block.settings.announcement_text }}
+                </div>
+              {% endif %}
+              <div class="announcement-bar-text-mobile">
+                {% if block.settings.announcement_text_mobile != blank %}
+                  {{ block.settings.announcement_text_mobile }}
+                {% else %}
+                  {{ block.settings.announcement_text }}
+                {% endif %}
+              </div>
+      		</div>
+		{% endfor %}
+      </div>
+	</section>
+  {% endif %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "Announcement bar Slider",
+  "class": "slideshow--section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Announcement Bar Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement",
+      "label": "Show announcement"
+    },
+    {
+      "type": "checkbox",
+      "id": "homepage_announcement",
+      "label": "Show on home page only"
+    },
+    {
+      "id": "enable_autoplay",
+      "type": "checkbox",
+      "label": "Autoplay slideshow",
+      "default": true
+    },
+    {
+      "id": "autoplay_duration",
+      "type": "range",
+      "label": "Autoplay slide duration",
+      "min": 5,
+      "max": 12,
+      "step": 1,
+      "unit": "sec",
+      "default": 8
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Slide",
+      "settings": [
+        {
+          "id": "announcement_text",
+          "type": "textarea",
+          "label": "Text",
+          "default": "Announce something here"
+        },
+        {
+          "id": "announcement_text_mobile",
+          "type": "textarea",
+          "label": "Text (mobile)",
+          "info": "Use this option if you want to display alternate text in mobile. Recommended for shortening announcement text to make suitable for mobile."
+        },
+        {
+          "id": "announcement_link",
+          "type": "url",
+          "label": "Link"
+        },
+        {
+          "id": "announcement_color",
+          "type": "color",
+          "label": "Text color",
+          "default": "#000000"
+        },
+        {
+          "id": "announcement_background",
+          "type": "color",
+          "label": "Background color",
+          "default": "#ffffff"
+        }
+	  ]
+	}
+  ]
+}
+
+{% endschema %}

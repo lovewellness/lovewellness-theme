@@ -1,0 +1,9 @@
+<style>
+  {% if request.page_type == 'product' %}
+  @media(max-width: 600px) {
+    .gallery-navigation--scroller {
+      min-height: 72px;
+    }
+  }
+  {% endif %}
+</style>

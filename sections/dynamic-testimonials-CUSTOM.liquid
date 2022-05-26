@@ -1,0 +1,212 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="dynamic-testimonials">
+</script>
+
+<script type="application/pxs-animation-mapping+json">
+  {
+    "blocks": [".testimonial"],
+    "elements": [
+      ".testimonial__image-container"
+    ]
+  }
+</script>
+
+{% style %}
+  @media only screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} .home-section--title {
+      margin-top: {{ section.settings.xs_margin_top }}px;
+      margin-bottom: {{ section.settings.xs_margin_bottom }}px;
+    }
+  }
+{% endstyle %}
+
+<section class="testimonials-section testimonials-section-CUSTOM section-{{ section.id }}">
+  {% if section.settings.title != blank %}
+    <h2 class="home-section--title">
+      {{ section.settings.title | escape }}
+    </h2>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    <div class="testimonials testimonials--{{ section.settings.text_size }} home-section--content">
+      {% for block in section.blocks %}
+        <div class="testimonial" {{ block.shopify_attributes }}>
+          <div class="testimonial__content">
+            {% if block.settings.image != blank %}
+              <div class="testimonial__image-container testimonial__image-container--{{ section.settings.image_crop }}">
+                {% if section.settings.image_crop == 'circle' or section.settings.image_crop == 'rounded' %}
+                  {% assign image_crop = 'center' %}
+                {% else %}
+                  {% assign image_crop = false %}
+                {% endif %}
+
+                {%
+                  render 'rimg',
+                  img: block.settings.image,
+                  class: 'testimonial__image',
+                  size: '400x',
+                  crop: image_crop,
+                  lazy: true,
+                  canvas: true
+                %}
+              </div>
+            {% endif %}
+
+            {% if block.settings.title != blank or block.settings.text != blank or block.settings.btn_label != blank %}
+              <div class="testimonial__info">
+                {% if block.settings.title != blank %}
+                  <div class="testimonial__title">
+                    {{ block.settings.title }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.text != blank %}
+                  <div class="testimonial__text">
+                    {{ block.settings.text }}
+                  </div>
+                {% endif %}
+
+                {% if block.settings.btn_label != blank %}
+                  <a{% if block.settings.btn_link != blank %} href="{{ block.settings.btn_link }}"{% endif %} class="testimonial__btn button-primary">
+                    {{ block.settings.btn_label }}
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Testimonials CUSTOM",
+  "class": "testimonials--section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Testimonials"
+    },
+    {
+      "type": "header",
+      "content": "Heading Margins (px)"
+    },
+    {
+      "type": "range",
+      "id": "xs_margin_top",
+      "label": "Margin Top (Mobile)",
+      "default": 50,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "range",
+      "id": "xs_margin_bottom",
+      "label": "Margin Bottom (Mobile)",
+      "default": 20,
+      "min": 0,
+      "max": 100,
+      "step": 1
+    },
+    {
+      "type": "select",
+      "id": "image_crop",
+      "label": "Image crop",
+      "options": [
+        {
+          "label": "Original",
+          "value": "original"
+        },
+        {
+          "label": "Circle",
+          "value": "circle"
+        },
+        {
+          "label": "Rounded rectangle",
+          "value": "rounded"
+        }
+      ],
+      "default": "circle"
+    },
+    {
+      "type": "select",
+      "id": "text_size",
+      "label": "Text size",
+      "options": [
+        {
+          "label": "Small",
+          "value": "small"
+        },
+        {
+          "label": "Medium",
+          "value": "medium"
+        },
+        {
+          "label": "Large",
+          "value": "large"
+        }
+      ],
+      "default": "medium"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Author's image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add customer reviews and testimonials to showcase your store's happy customers.</p>"
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "btn_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials CUSTOM",
+      "category": "Testimonials",
+      "blocks": [
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        },
+        {
+          "type": "testimonial"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,67 @@
+<style>
+  .divider--{{ section.id }} { padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; }
+  .divider--{{ section.id }} .section__content { background-color: {{ section.settings.line_color }}; height: {{ section.settings.line_height }}px; }
+</style>
+
+<section class="section section--divider divider divider--{{ section.id }} {{ section.settings.container_width }}" {{ section.shopify_attributes }} >
+  <div class="section__content"></div>
+</section>
+
+{% schema %}
+{
+  "name": "Divider",
+  "settings": [
+    {
+      "type":"header",
+      "content":"Design Settings"
+    },
+    {
+      "type":"select",
+      "id":"container_width",
+      "label":"Container Width",
+      "options":[
+        {"value":"divider--container-full", "label":"Full Width"},
+        {"value":"divider--container", "label":"Contained"},
+        {"value":"divider--container-slim", "label":"Contained Slim"}
+      ],
+      "default":"divider--container"
+    },
+    {
+      "type":"range",
+      "id":"padding_top",
+      "label":"Container Padding Top (px)",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type":"range",
+      "id":"padding_bottom",
+      "label":"Container Padding Bottom (px)",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type":"number",
+      "id":"line_height",
+      "label":"Line Height",
+      "default": 0,
+      "info" : "Change value to include a horizontal line between divider and content. Leave value at 0 to remove line."
+    },
+    {
+      "type":"color",
+      "id":"line_color",
+      "label":"Line Color",
+      "default":"#0c2c34"
+    }
+  ],
+  "presets": [{
+    "name": "Divider",
+    "category": "Content"
+  }]
+}
+{% endschema %}
+

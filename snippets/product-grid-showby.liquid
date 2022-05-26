@@ -1,0 +1,128 @@
+{%- comment -%}
+  @param show_by {String}
+    Current pagination value
+
+  @param filter_type {String}
+    Either 'tag' or 'faceted' depending on the type of filtering used
+{%- endcomment -%}
+
+{% assign show_by_values = '24|36|48' | split: '|' %}
+
+{% assign url_base = '' %}
+{% if collection.url != blank %}
+  {% assign url_base = collection.url %}
+{% elsif collection.current_vendor %}
+  {% assign url_base = collection.current_vendor | url_for_vendor %}
+{% endif %}
+
+{% assign url_base_append = '?' %}
+{% if url_base contains '?' %}
+  {% assign url_base_append = '&' %}
+{% endif %}
+
+{% comment %} Append existing tag filters {% endcomment %}
+{% if current_tags %}
+  {% assign tags_list = '' %}
+
+  {% for tag in current_tags %}
+    {% assign handle = tag | handle %}
+    {% assign tags_list = tags_list | append: handle | append: '|' %}
+  {% endfor %}
+
+  {% assign tags_segment = tags_list | split: '|' | join: '&' | prepend: 'constraint=' %}
+
+  {% assign
+    url_base = url_base
+    | append: url_base_append
+    | append: tags_segment
+  %}
+{% endif %}
+
+{% comment %} Append existing faceted filters {% endcomment %}
+{% if filter_type == 'faceted' %}
+  {% assign filter_list = '' %}
+  {% for filter in collection.filters %}
+    {% case filter.type %}
+      {% when 'list' %}
+        {% for active_filter in filter.active_values %}
+          {% assign filter_list = filter_list
+            | append: '&'
+            | append: active_filter.param_name
+            | append: '='
+            | append: active_filter.value
+          %}
+        {% endfor %}
+      {% when 'price_range' %}
+        {% if filter.min_value.value -%}
+          {% assign min_value = filter.min_value.value | money_without_currency | replace: ',', '' %}
+          {% assign filter_list = filter_list
+            | append: '&'
+            | append: filter.min_value.param_name
+            | append: '='
+            | append: min_value
+          %}
+        {%- endif %}
+
+        {% if filter.max_value.value -%}
+          {% assign max_value = filter.max_value.value | money_without_currency | replace: ',', '' %}
+          {% assign filter_list = filter_list
+            | append: '&'
+            | append: filter.max_value.param_name
+            | append: '='
+            | append: max_value
+          %}
+        {%- endif %}
+      {% endcase %}
+  {% endfor %}
+
+  {% assign filter_list = filter_list | replace_first: '&', '' %}
+
+  {% assign
+    url_base = url_base
+    | append: url_base_append
+    | append: filter_list
+  %}
+{% endif %}
+
+{% if collection.sort_by != blank %}
+  {% assign tags_list = '' %}
+
+  {% assign url_base_append = '?' %}
+  {% if url_base contains '?' %}
+    {% assign url_base_append = '&' %}
+  {% endif %}
+
+  {% assign
+    url_base = url_base
+    | append: url_base_append
+    | append: 'sort_by='
+    | append: collection.sort_by
+  %}
+{% endif %}
+
+<ul class="utils-showby">
+  <li>
+    <span class="utils-showby-title">
+      {{ 'product_grid.show_per_page.title' | t }}
+    </span>
+  </li>
+
+  {% if url_base contains '?' %}
+    {% assign url_base = url_base | append: '&' %}
+  {% else %}
+    {% assign url_base = url_base | append: '?' %}
+  {% endif %}
+
+  {%- for value in show_by_values -%}
+    {%- assign show_by_value = value | times: 1 -%}
+    <li>
+      <a
+        class="utils-showby-item {% if show_by == show_by_value %}utils-showby-item--active{% endif %}"
+        href="{{ url_base }}view=view-{{ show_by_value }}&grid_list"
+        aria-label="show {{ value }} items"
+      >
+        {{ value }}
+      </a>
+    </li>
+  {%- endfor -%}
+</ul>

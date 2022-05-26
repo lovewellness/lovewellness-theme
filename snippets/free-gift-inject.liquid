@@ -1,0 +1,55 @@
+{% assign free_gift_over_price_35 = 3500 %} 
+{% assign variant_id = '40095007735923' %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+  <script>
+
+   
+    var cartItems = {{ cart.items | json }},
+        qtyInTheCart = 0,
+        cartUpdates = {},
+        cartTotal = {{ cart.total_price }};
+        
+    var inc = false;
+    for(var i=0; i<cartItems.length; i++){
+      if(cartItems[i].variant_id=={{ variant_id }}){
+         inc=true;
+      } 
+    }
+    console.log(inc);
+    
+    
+    
+      if ( cartTotal >= {{ free_gift_over_price_35 }} && inc==false)  {
+        console.log('More 35');
+          fetch(window.Shopify.routes.root + 'cart/add.js', { method: 'POST', headers: { 'Content-Type': 'application/json'
+        },
+          body: JSON.stringify({ 'items': [{'id': {{ variant_id }}, 'quantity': 1 }]})
+        }).then(response => {
+          return response.json();
+        }).catch((error) => {
+          console.error('Error:', error);
+        });
+        
+        setTimeout(function(){
+            location.reload(); 
+          },1500);
+        
+      } else if(cartTotal < {{ free_gift_over_price_35 }} && inc==true) {
+        console.log('Less 35');
+          $.ajax({
+              method:'POST',
+              url:'/cart/change.js',
+              data:{ id: {{ variant_id }}, quantity: 0 },
+              dataType: 'json',
+              success: function(data) {
+                 location.reload();  
+              }
+          });
+
+      } else {
+          console.log('Weird error');
+      }
+    
+
+  </script>

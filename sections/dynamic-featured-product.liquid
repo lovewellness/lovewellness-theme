@@ -1,0 +1,252 @@
+{% assign product = all_products[section.settings.product] %}
+{% assign onboarding = false %}
+
+{% if product.empty? %}
+  {% assign onboarding = true %}
+{% endif %}
+
+<script
+  type="application/json"
+  data-section-type="dynamic-featured-product"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "settings": {
+      "cart_redirection": {{ settings.enable_cart_redirection | json }},
+      "money_format": {{ shop.money_format | strip_html | json }},
+      "gallery_video_autoplay": {{ section.settings.gallery_video_autoplay | json }},
+      "gallery_video_looping": {{ section.settings.gallery_video_looping | json }},
+      "gallery_thumbnail_position": {{ section.settings.gallery_thumbnail_position | json }},
+      "gallery_hover_zoom": {{ section.settings.gallery_hover_zoom | json }},
+      "gallery_click_to_zoom": "disabled",
+      "swatches_enable": {{ settings.swatches_enable | json }},
+      "sold_out_options": {{ settings.sold_out_options | json }},
+      "select_first_available_variant": {{ settings.select_first_available_variant | json }}
+    },
+    "context": {
+      "select_variant": {{ 'product.general.select_variant' | t | json }},
+      "product_available": {{ 'product.buttons.add_to_cart' | t | json }},
+      "product_sold_out": {{ 'product.buttons.sold_out' | t | json }},
+      "product_unavailable": {{ 'product.buttons.unavailable' | t | json }}
+    },
+    "product": {% unless onboarding %}{{ product | json }}{% else %}false{% endunless} %}
+  }
+</script>
+
+<script type="application/pxs-animation-mapping+json">
+  {
+    "blocks": [".product-main"],
+    "elements": [
+      ".product-details",
+      "[data-product-form-area]"
+    ]
+  }
+</script>
+
+<section class="featured-product--container home-section--content" data-product-wrapper>
+  <div class="featured-product--inner">
+    {%
+      render 'product',
+      product: product,
+      is_product_modal: false,
+      is_featured_product: true,
+      onboarding: onboarding,
+      show_dynamic_checkout_button: settings.show_dynamic_checkout_button,
+      select_first_available_variant: settings.select_first_available_variant,
+      gallery_aspect_ratio: section.settings.gallery_aspect_ratio,
+      gallery_thumbnail_position: section.settings.gallery_thumbnail_position,
+      gallery_image_crop: section.settings.gallery_image_crop,
+      gallery_click_to_zoom: 'disabled',
+      gallery_hover_zoom: section.settings.gallery_hover_zoom
+    %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "class": "featured-product--section",
+  "settings": [
+    {
+      "id": "product",
+      "type": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Learn more about [media types](https://help.shopify.com/en/manual/products/product-media/product-media-types)"
+    },
+    {
+      "type": "select",
+      "id": "gallery_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        {
+          "value": "natural",
+          "label": "Natural"
+        },
+        {
+          "value": "short",
+          "label": "Short (4:3)"
+        },
+        {
+          "value": "square",
+          "label": "Square (1:1)"
+        },
+        {
+          "value": "tall",
+          "label": "Tall (2:3)"
+        }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_image_crop",
+      "label": "Enable image crop",
+      "info": "If disabled, white space will be applied around the image. Has no effect when media aspect ratio is set to natural.",
+      "default": false
+    },
+    {
+      "id": "gallery_thumbnail_position",
+      "type": "select",
+      "label": "Thumbnails position",
+      "options": [
+        {
+          "value": "below",
+          "label": "Below main image"
+        },
+        {
+          "value": "left",
+          "label": "Left of main image"
+        }
+      ],
+      "default": "below"
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_video_autoplay",
+      "label": "Enable video autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_video_looping",
+      "label": "Enable video looping",
+      "default": true
+    },
+    {
+      "id": "gallery_hover_zoom",
+      "type": "select",
+      "label": "Roll-over image zoom",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled"
+        },
+        {
+          "value": "replace",
+          "label": "Enabled (replace main image)"
+        }
+      ],
+      "info": "Only applies to desktop screen sizes.",
+      "default": "disabled"
+    },
+    {
+      "type": "paragraph",
+      "content": "For the best zoom results, make sure your images are larger than 1600px."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "SKU",
+      "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Text block</p>"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "form",
+      "name": "Form",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Customize form features for the featured product in the products portion of the theme settings."
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1
+    },
+    {
+      "type": "view-product-link",
+      "name": "View product link",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "View full details"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "title"
+        },
+        {
+          "type": "price"
+        },
+        {
+          "type": "view-product-link"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

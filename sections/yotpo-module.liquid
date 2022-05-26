@@ -1,0 +1,57 @@
+<script
+  type="application/json"
+  data-section-id="{{ section.id }}"
+  data-section-type="yotpo-module"
+></script>
+
+<section
+  class="
+    yotpo-module__container
+  "
+>
+  <div class="yotpo-module__wrapper">
+        <div class="yotpo-module__yotpo">
+            <div class="yotpo-widget-instance" data-yotpo-instance-id="{{section.settings.yotpo_instance_id}}"></div>
+        </div>
+
+        {% if section.settings.image %}
+          <div class="yotpo-module__image-wrapper">
+            {%
+              render 'rimg'
+              img: section.settings.image,
+              alt: alt,
+              class: "yotpo-module__image",
+              size: '1000x',
+              lazy: true,
+              crop: crop,
+            %}
+          </div>
+        {% endif%}
+    </div>
+</section>
+
+{% schema %}
+{
+  "name": "Yotpo Module",
+  "class": "yotpo-module--section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "yotpo_instance_id",
+      "label": "Yotpo Instance ID"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image ( hidden if no image is given )"
+    }
+  ],
+  "presets": [
+    {
+      "category": "Yotpo",
+      "name": "Yotpo Module"
+    }
+  ]
+}
+
+{% endschema %}

@@ -1,0 +1,15 @@
+{% comment %}
+  @param class_root {String}
+    Base class root
+{% endcomment %}
+
+{% if product.metafields.custom_fields["image_badges"] != blank %}
+  <div class="badges-images badges-images--{{ class_root }}">
+    {% for item in product.metafields.custom_fields["image_badges"] %}
+      {% if item["badge_image"] != blank %}
+        <img src="{{ item["badge_image"] }}" class="badges-images__item" alt="{{ item["alt_text"] }}" />  
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+  

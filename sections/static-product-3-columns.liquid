@@ -1,0 +1,219 @@
+<script
+  type="application/json"
+  data-section-type="static-product"
+  data-section-id="{{ section.id }}"
+  data-section-data
+>
+  {
+    "settings": {
+      "cart_redirection": {{ settings.enable_cart_redirection | json }},
+      "gallery_thumbnail_position": {{ section.settings.gallery_thumbnail_position | json }},
+      "gallery_video_autoplay": {{ section.settings.gallery_video_autoplay | json }},
+      "gallery_video_looping": {{ section.settings.gallery_video_looping | json }},
+      "gallery_hover_zoom": {{ section.settings.gallery_hover_zoom | json }},
+      "gallery_click_to_zoom": {{ section.settings.gallery_click_to_zoom | json }},
+      "money_format": {{ shop.money_format | strip_html | json }},
+      "swatches_enable": {{ settings.swatches_enable | json }},
+      "sold_out_options": {{ settings.sold_out_options | json }},
+      "select_first_available_variant": {{ settings.select_first_available_variant | json }}
+    },
+    "context": {
+      "select_variant": {{ 'product.general.select_variant' | t | json }},
+      "product_available": {{ 'product.buttons.add_to_cart' | t | json }},
+      "product_sold_out": {{ 'product.buttons.sold_out' | t | json }},
+      "product_unavailable": {{ 'product.buttons.unavailable' | t | json }}
+    },
+    "product": {{ product | json }}
+  }
+</script>
+
+{% render 'breadcrumbs' %}
+
+<section class="product--container layout--three-col" data-product-wrapper>
+  {%
+    render 'product',
+    layout: 'layout--three-col',
+    is_product_modal: false,
+    show_dynamic_checkout_button: settings.show_dynamic_checkout_button,
+    select_first_available_variant: settings.select_first_available_variant,
+    gallery_aspect_ratio: section.settings.gallery_aspect_ratio,
+    gallery_thumbnail_position: section.settings.gallery_thumbnail_position,
+    gallery_image_crop: section.settings.gallery_image_crop,
+    gallery_click_to_zoom: section.settings.gallery_click_to_zoom,
+    gallery_hover_zoom: section.settings.gallery_hover_zoom
+  %}
+</section>
+
+{% schema %}
+{
+  "name": "Product information",
+  "class": "product--section section--canonical",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Media"
+    },
+    {
+      "type": "paragraph",
+      "content": "Learn more about [media types](https://help.shopify.com/en/manual/products/product-media/product-media-types)"
+    },
+    {
+      "type": "select",
+      "id": "gallery_aspect_ratio",
+      "label": "Aspect ratio",
+      "options": [
+        { "value": "natural", "label": "Natural" },
+        { "value": "short", "label": "Short (4:3)" },
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "tall", "label": "Tall (2:3)" }
+      ],
+      "default": "natural"
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_image_crop",
+      "label": "Enable image crop",
+      "info": "If disabled, white space will be applied around the image. Has no effect when media aspect ratio is set to natural.",
+      "default": false
+    },
+    {
+      "id": "gallery_thumbnail_position",
+      "type": "select",
+      "label": "Thumbnails position",
+      "options": [
+        {
+          "value": "below",
+          "label": "Below main image"
+        },
+        {
+          "value": "left",
+          "label": "Left of main image"
+        }
+      ],
+      "default": "below"
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_video_autoplay",
+      "label": "Enable video autoplay",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "gallery_video_looping",
+      "label": "Enable video looping",
+      "default": true
+    },
+    {
+      "id": "gallery_hover_zoom",
+      "type": "select",
+      "label": "Roll-over image zoom",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled"
+        },
+        {
+          "value": "separate",
+          "label": "Enabled (separate box)"
+        },
+        {
+          "value": "replace",
+          "label": "Enabled (replace main image)"
+        }
+      ],
+      "info": "Only applies to desktop screen sizes.",
+      "default": "disabled"
+    },
+    {
+      "id": "gallery_click_to_zoom",
+      "type": "select",
+      "label": "Click to zoom image",
+      "options": [
+        {
+          "value": "disabled",
+          "label": "Disabled"
+        },
+        {
+          "value": "always",
+          "label": "Enabled"
+        },
+        {
+          "value": "desktop",
+          "label": "Enabled on desktop only"
+        },
+        {
+          "value": "mobile",
+          "label": "Enabled on mobile only"
+        }
+      ],
+      "default": "always",
+      "info": "Changes to \"Tap to zoom\" on mobile."
+    },
+    {
+      "type": "paragraph",
+      "content": "For the best zoom results, make sure your images are larger than 1600px."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "sku",
+      "name": "SKU",
+      "limit": 1
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Text block</p>"
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "link",
+      "name": "Link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "display_link",
+          "label": "Link name",
+          "default": "Link name"
+        },
+        {
+          "type": "text",
+          "id": "section_id",
+          "label": "Section ID"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

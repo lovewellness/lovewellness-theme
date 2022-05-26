@@ -1,0 +1,831 @@
+<!doctype html>
+<html class="no-js no-touch" lang="{{ request.locale.iso_code }}">
+  <head>
+
+    {% assign boost_pfs_is_init = false %}    
+{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+    {%- unless template contains 'boost-pfs-original' -%}
+    {% assign boost_pfs_is_init = true %}
+	  {%- if request.page_type == 'collection' -%}
+    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/filter" />
+    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/filter" />
+    {%- else -%}
+    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/search" />
+    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/search" />
+    {%- endif -%}
+    <link rel="preload" href="{{ 'boost-pfs-vendor.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-core.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-filter.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">
+    <link rel="preload" as="style" href="{{ 'boost-pfs-general.css' | asset_url }}">    
+    {%- endunless -%}
+{%- endif -%}    
+
+{%- unless boost_pfs_is_init -%}
+    <link rel="preload" href="{{ 'boost-pfs-core-instant-search.js' | asset_url }}" as="script">    
+    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">    
+    <link rel="preload" as="style" href="{{ 'boost-pfs-instant-search.css' | asset_url }}">
+{%- endunless -%}
+    <link rel="preload" as="style" href="{{ 'boost-pfs-custom.css' | asset_url }}">
+    
+    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
+    {{ 'splide.min.js' | asset_url | script_tag }}
+
+    {% render 'preload-hints' %}
+
+    {% if template.suffix contains 'referrals' %}
+      <script>
+        window.devisedLabsAccelAppConfig = {
+          version: 1,
+          contentForHead: { asyncScripts: { priorityScripts: [{matchSrc: 'widget-referred-friend'}] } }
+        }
+      </script>
+    {% endif %}
+
+    {% comment %}begin rb_code{% endcomment %}
+    {% comment %}To keep this site fast, this code must come right after the start of the head tag{% endcomment %}
+    {% render 'renderbetter-code', place: 'head-top' %}
+    {% comment %}end rb_code{% endcomment %}
+
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+    <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.41&shop=dirt-project.myshopify.com"></script>
+<!-- End BlackCrow Script Tag -->
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'analytics', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+
+    {% comment %}begin rb_code{% endcomment %}
+    {% comment %}This code must come after meta tags in the head tag{% endcomment %}
+    {% render 'renderbetter-code', place: 'head-after-meta-tags' %}
+    {% comment %}end rb_code{% endcomment %}
+
+    <title>
+      {{- page_title -}}
+
+      {%- if current_tags -%}
+        {% capture cat_array %}{%- render 'advanced-tag-loop' -%}{% endcapture %}
+        {% assign cat_array = cat_array | split: '|' %}
+        {% assign title_tags = '' %}
+        {% assign meta_tags = current_tags | join: ', ' %}
+        {%- for tag in current_tags -%}
+          {% assign is_advanced_tag = false %}
+          {% assign cat = tag | split: '_' | first %}
+
+          {%- unless cat == tag -%}
+            {%- if cat_array contains cat -%}
+              {% assign is_advanced_tag = true %}
+              {% assign title_tags = title_tags | append: ', ' | append: tag | replace_first: '_', ': ' %}
+            {%- endif -%}
+          {%- endunless -%}
+
+          {%- unless is_advanced_tag -%}
+            {% assign title_tags = title_tags | append: ', ' | append: tag %}
+          {%- endunless -%}
+        {%- endfor -%}
+        {{ 'general.title.tags' | t: tags: title_tags | remove_first: ', ' }}
+      {%- endif -%}
+
+      {%- if current_page != 1 -%}
+        {{- 'general.title.page' | t: page: current_page -}}
+      {%- endif -%}
+
+      {%- unless page_title contains shop.name -%}
+        {{- 'general.title.shop' | t: shop: shop.name -}}
+      {%- endunless -%}
+    </title>
+
+
+
+    {% if page_description != blank %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'favicon' %}
+
+    {% if template contains 'collection' and current_tags %}
+      <meta name="robots" content="noindex" />
+      <link rel="canonical" href="{{ shop.url }}{{ collection.url }}" />
+    {% else %}
+      <link rel="canonical" href="{{ canonical_url }}" />
+    {% endif %}
+
+    <meta name="viewport" content="width=device-width">
+
+    {% comment %} START PRICE MANIPULATION WHEN PRODUCT IS SET TO SUBSCRIPTION {% endcomment %}
+      {% if template contains 'product' %}
+        {% comment %} Subscription Default {% endcomment %}
+        {% assign has_subscription_collection = false %}
+        {% for collection in product.collections %}
+            {% if collection.handle == "subscription-default" %}
+                {% assign has_subscription_collection = true %}
+            {% endif %}
+        {% endfor %}
+
+        {% comment %} Price Manipulator for Microdata Schema for Google {% endcomment %}
+        {% assign meta_data_discount_amount = 1 %}
+
+        {% if has_subscription_collection == true %}
+          {% if product.tags contains 'OGFullStore' %}
+            {% assign meta_data_discount_amount = 0.70 %}
+          {% endif %}
+          {% if product.tags contains 'OGMultis' %}
+            {% assign meta_data_discount_amount = 0.70 %}
+          {% endif %}
+        {% endif %}
+
+        {% assign meta_data_price = product.price | times: meta_data_discount_amount | money_without_currency | remove: ',' %}
+        {% comment %} Price Manipulator for Microdata Schema for Google {% endcomment %}
+
+        <meta property="product:price:amount" content="{{ meta_data_price }}">
+      {% endif %}
+    {% comment %} END PRICE MANIPULATION WHEN PRODUCT IS SET TO SUBSCRIPTION {% endcomment %}
+
+    {% assign twitter_handle = settings.social_twitter | split: 'twitter.com/' | last %}
+    {%
+      render 'social-meta-tags',
+      twitter_handle: twitter_handle
+    %}
+
+    {% comment %}begin rb_cfh{% endcomment %}
+    {% capture cfh %}    
+      {{ content_for_header }}
+    {% endcapture %}
+    {% render 'renderbetter-code', cfh: cfh %}
+    {% comment %}end rb_cfh{% endcomment %}
+
+    {% render 'root-css' %}
+
+    {% comment %}begin rb_critical_css{% endcomment %}
+    {% capture css %}
+      {{ 'theme.css' | asset_url | stylesheet_tag }}
+    {% endcapture %}
+    {% render 'renderbetter-code', css: css %}
+    {% comment %}end rb_critical_css{% endcomment %}
+
+    {% comment %}Inject theme-object begin{% endcomment %}
+    <script>
+      window.Theme = window.Theme || {};
+      window.Theme.version = '2.1.3';
+      window.Theme.name = 'Love Wellness';
+      window.Theme.routes = {
+        "root_url": "{{ routes.root_url }}",
+        "account_url": "{{ routes.account_url }}",
+        "account_login_url": "{{ routes.account_login_url }}",
+        "account_logout_url": "{{ routes.account_logout_url }}",
+        "account_register_url": "{{ routes.account_register_url }}",
+        "account_addresses_url": "{{ routes.account_addresses_url }}",
+        "collections_url": "{{ routes.collections_url }}",
+        "all_products_collection_url": "{{ routes.all_products_collection_url }}",
+        "search_url": "{{ routes.search_url }}",
+        "cart_url": "{{ routes.cart_url }}",
+        "cart_add_url": "{{ routes.cart_add_url }}",
+        "cart_change_url": "{{ routes.cart_change_url }}",
+        "cart_clear_url": "{{ routes.cart_clear_url }}",
+        "product_recommendations_url": "{{ routes.product_recommendations_url }}",
+      };
+    </script>
+    {% comment %}Inject theme-object end{% endcomment %}
+
+    {% comment %}Inject Customer Details For Tribe start{% endcomment %}
+    {% if customer.email != blank %}
+      {% capture lw_customer_info %}
+        {{ shop.url }}:{{ customer.email }}:{{ customer.name }}:{{ customer.id }}
+      {%endcapture %}
+      {% assign lw_secret_string = lw_customer_info | hmac_sha256: '75c48e3245b97e19642ee3874c7b18ceff745b4cf564d3d6' %}
+
+      <script
+      type="application/json"
+      data-tribe-current-user>
+      {
+        "hash": "{{ lw_secret_string }}",
+        "email": "{{ customer.email }}",
+        "name": "{{ customer.name }}",
+        "customer_id": "{{ customer.id }}",
+        "shop_origin": "{{ shop.url }}"
+      }
+      </script>
+      <script
+      type="application/json"
+      data-tribe-fetch>
+      {
+        "url": "https://ota13i42p1.execute-api.us-east-2.amazonaws.com/dev"
+      }
+      </script>
+    {% endif %}
+    {% comment %}Inject Customer Details For Tribe end{% endcomment %}
+
+
+    {% comment %}Yotpo{% endcomment %}
+    {% if request.host == 'lwellness-staging.myshopify.com' %}
+      <script type="text/javascript">
+        (function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/Ftgv8WnzYGFYUubD4w6Fww5MImFjS8U24OFw1dnE/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+      </script>
+      <script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/IeTOsjTntAHPSXOrvD3rQQ" async></script>
+    {% else %}
+      {% comment %}begin rb_defer{% endcomment %}
+      {% capture code %}
+        <script type="text/javascript">
+          (function e(){var e=document.createElement("script");e.type="text/javascript",e.async=true,e.src="//staticw2.yotpo.com/1kwQJ5kAqxUWGLOo6IGdg5ZQlfcTy9k5YmJC1VhH/widget.js";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})();
+        </script>
+        <script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/_oArhnSQcctEAXaHiA-rPg" async></script>
+      {% endcapture %}
+      {% render 'renderbetter-code', defer: 'btf-feature', code: code %}
+      {% comment %}end rb_defer{% endcomment %}
+    {% endif %}
+
+    <!-- Start of LittledataLayer -->
+    {% include 'LittledataLayer' %}
+    <!-- End of LittledataLayer -->
+
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+      <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-N4LP9ZM');</script>
+      <!-- End Google Tag Manager -->
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'analytics', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
+    {% include 'inject-header' %}
+
+    
+
+    {% comment %}begin rb_code{% endcomment %}
+    {% comment %}This code must come before the end of the head tag{% endcomment %}
+    {% render 'renderbetter-code', place: 'head-bottom' %}
+    {% comment %}end rb_code{% endcomment %}
+
+    {%- render 'ordergroove_static_asset' -%}
+    <!--begin-boost-pfs-filter-css-->
+    {% render 'boost-pfs-style' %}
+    <!--end-boost-pfs-filter-css-->
+    
+    <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
+  {% include 'store-credit-launcher' %}
+</head>
+
+  <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
+    
+    {% comment %}begin rb_code{% endcomment %}
+    {% comment %}This code must come right after the start of the body tag{% endcomment %}
+    {% render 'renderbetter-code', place: 'body-top' %}
+    {% comment %}end rb_code{% endcomment %}
+    
+    <script>
+      document.documentElement.className=document.documentElement.className.replace(/\bno-js\b/,'js');
+      if(window.Shopify&&window.Shopify.designMode)document.documentElement.className+=' in-theme-editor';
+      if(('ontouchstart' in window)||window.DocumentTouch&&document instanceof DocumentTouch)document.documentElement.className=document.documentElement.className.replace(/\bno-touch\b/,'has-touch');
+    </script>
+    <a class="skip-to-main" href="#site-main">{{ 'general.accessibility.skip_to_content' | t }}</a>
+    {% comment %}{% section 'static-announcement' %}{% endcomment %}
+    {% section 'static-announcement-CUSTOM' %}
+    {% section 'static-utility-bar' %}
+    <header
+      class="site-header site-header-nav--open"
+      role="banner"
+      data-site-header
+    >
+      {% section 'static-header' %}
+    </header>
+    <div class="intersection-target" data-header-intersection-target></div>
+    <div class="site-main-dimmer" data-site-main-dimmer></div>
+    <main id="site-main" class="site-main" aria-label="Main content" tabindex="-1">
+      {%- render 'ordergroove_global' -%}{{ content_for_layout }}
+    </main>
+
+    {% section 'static-footer' %}
+
+    {% comment %}
+      Below are various templates used in JavaScript
+    {% endcomment %}
+    <div style="display: none;" aria-hidden="true" data-templates>
+      {% comment %}Inject message-banner begin{% endcomment %}
+      <div
+        class="message-banner--container"
+        role="alert"
+        data-message-banner
+      >
+        <div class="message-banner--outer">
+          <div class="message-banner--inner" data-message-banner-content></div>
+      
+          <button
+            class="message-banner--close"
+            type="button"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+            data-message-banner-close
+          >
+            {%- render 'icon-menu-close' -%}
+          </button>
+        </div>
+      </div>
+      {% comment %}Inject message-banner end{% endcomment %}
+
+      {% comment %}Inject atc-banner begin{% endcomment %}
+      <section class="atc-banner--container" role="log" data-atc-banner>
+        <div class="atc-banner--outer">
+          <div class="atc-banner--inner">
+            <div class="atc-banner--product">
+              <h2 class="atc-banner--product-title">
+                <span class="atc-banner--product-title--icon">
+                  {%- render 'icon-checkmark' -%}
+                </span>
+                {{ 'add_to_cart_banner.general.product_added' | t }}
+              </h2>
+      
+              <div class="atc--product">
+                <div class="atc--product-image" data-atc-banner-product-image>
+                  {{ 'image' | placeholder_svg_tag: 'placeholder--image' }}
+                </div>
+                <div class="atc--product-details">
+                  <h2 class="atc--product-details--title" data-atc-banner-product-title></h2>
+                  <span class="atc--product-details--options" data-atc-banner-product-options></span>
+                  <span class="atc--product-details--price">
+                    <span class="atc--product-details--price-quantity" data-atc-banner-product-price-quantity></span>
+                    <span class="atc--product-details--price-value money" data-atc-banner-product-price-value></span>
+                    <span class="atc--product-details--price-discounted money" data-atc-banner-product-price-discounted></span>
+                    <span class="atc--product-details--unit-price hidden" data-atc-banner-unit-price>
+                      {{ 'product_price.price.price_per_unit_html' | t: total_quantity: '** total_quantity **', unit_price: '** unit_price **', unit_measure: '** unit_measure **' }}
+                    </span>
+                  </span>
+                  <ul class="discount-list" data-atc-banner-product-discounts>
+                    <li class="discount-list-item">
+                      {% render 'icon-library', id: 'icon-sale-tag' %}
+                      <span class="discount-title"></span>
+                      (-<span class="money discount-amount"></span>)
+                    </li>
+                  </ul>
+                  <span class="atc--line-item-subscriptions" data-atc-banner-product-subscription-title></span>
+                </div>
+              </div>
+            </div>
+      
+            <div class="atc-banner--cart">
+              <div class="atc-banner--cart-subtotal">
+                <span class="atc-subtotal--label">
+                  {{ 'add_to_cart_banner.general.sub_total' | t }}
+                </span>
+                <span class="atc-subtotal--price money" data-atc-banner-cart-subtotal></span>
+              </div>
+      
+              <footer class="atc-banner--cart-footer">
+                <a class="button-secondary atc-button--viewcart" href="{{ routes.cart_url }}" data-atc-banner-cart-button>
+                  {{ 'add_to_cart_banner.general.view_cart_html' | t: count: '<span></span>' }}
+                </a>
+                <form
+                  action="{{ routes.cart_url }}"
+                  method="post"
+                  aria-label="cart checkout"
+                >
+                  <button class="button-primary atc-button--checkout" type="submit" name="checkout">
+                    {% if settings.enable_checkout_lock_icon %}
+                      {% render 'icon-checkout-lock' %}
+                    {% endif %}
+                    <span>{{ 'add_to_cart_banner.general.checkout' | t }}</span>
+                  </button>
+                </form>
+              </footer>
+            </div>
+          </div>
+      
+          <button
+            class="atc-banner--close"
+            type="button"
+            aria-label="{{ 'general.accessibility.close' | t }}"
+            data-atc-banner-close
+          >
+            {%- render 'icon-menu-close' -%}
+          </button>
+        </div>
+      </section>
+      {% comment %}Inject atc-banner end{% endcomment %}
+
+    </div>
+
+    {% comment %}
+      Modal container, used on Collections, Password, and QuickShop
+    {% endcomment %}
+    {% comment %}Inject modal begin{% endcomment %}
+    <div class="modal" data-modal-container aria-label="modal window" data-trap-focus>
+      <div class="modal-inner" data-modal-inner>
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="{{ 'general.accessibility.close' | t }}"
+          data-modal-close
+        >
+          {% render 'icon-menu-close' %}
+        </button>
+        <div class="modal-content" data-modal-content></div>
+      </div>
+    </div>
+    
+    <div class="modal-1" data-modal-container-1 aria-label="modal window">
+      <div class="modal-inner" data-modal-inner>
+        <button
+          class="modal-close"
+          type="button"
+          aria-label="{{ 'general.accessibility.close' | t }}"
+          data-modal-1-close
+        >
+          {% render 'icon-menu-close' %}
+        </button>
+        <div class="modal-content" data-modal-content></div>
+      </div>
+    </div>
+    
+    <!--begin-boost-pfs-js-->
+    {% render 'boost-pfs' %}
+    <!--end-boost-pfs-js-->    
+    
+    {% comment %}Inject modal end{% endcomment %}
+
+    {% comment %}
+      This is the PhotoSwipe dialog which needs to be in the base page
+    {% endcomment %}
+    {% comment %}Inject product-gallery-zoom begin{% endcomment %}
+    {% comment %} Root element of PhotoSwipe. Must have class pswp. {% endcomment %}
+    <div
+      class="pswp"
+      tabindex="-1"
+      role="dialog"
+      aria-hidden="true"
+      aria-label="{{ 'general.accessibility.product_zoom_dialog' | t }}"
+      data-photoswipe
+    >
+    
+      {% comment %} Background of PhotoSwipe.
+            It's a separate element as animating opacity is faster than rgba(). {% endcomment %}
+      <div class="pswp__bg"></div>
+    
+      {% comment %} Slides wrapper with overflow:hidden. {% endcomment %}
+      <div class="pswp__scroll-wrap">
+          {% comment %} Container that holds slides.
+              PhotoSwipe keeps only 3 of them in the DOM to save memory.
+              Don't modify these 3 pswp__item elements, data is added later on. {% endcomment %}
+          <div class="pswp__container" aria-hidden="true">
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+              <div class="pswp__item"></div>
+          </div>
+    
+          {% comment %} Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. {% endcomment %}
+          <div class="pswp__ui pswp__ui--hidden">
+              <div class="pswp__top-bar">
+                  {% comment %}  Controls are self-explanatory. Order can be changed. {% endcomment %}
+                  <div class="pswp__counter"></div>
+                  <button class="pswp__button pswp__button--close" title="{{ 'general.accessibility.close' | t }}">
+                    <span tabindex="-1">
+                      {% render 'icon-library', id: 'icon-close' %}
+                    </span>
+                  </button>
+                  <button class="pswp__button pswp__button--share" title="Share"></button>
+                  <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                  <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+    
+                  {% comment %} Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR {% endcomment %}
+                  {% comment %} element will get class pswp__preloader--active when preloader is running {% endcomment %}
+                  <div class="pswp__preloader">
+                      <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                          <div class="pswp__preloader__donut"></div>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+    
+              <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                  <div class="pswp__share-tooltip"></div>
+              </div>
+    
+              <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+              </button>
+              <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+              </button>
+    
+              <div class="pswp__caption">
+                  <div class="pswp__caption__center"></div>
+              </div>
+          </div>
+      </div>
+      <div class="product-zoom--thumbnails" data-photoswipe-thumbs>
+        <button
+          class="gallery-navigation--scroll-button scroll-left"
+          aria-label="Scroll thumbnails left"
+          data-gallery-scroll-button
+        >
+          {% render 'icon-chevron-down' %}
+        </button>
+        <button
+          class="gallery-navigation--scroll-button scroll-right"
+          aria-label="Scroll thumbnails right"
+          data-gallery-scroll-button
+        >
+          {% render 'icon-chevron-down' %}
+        </button>
+        <div class="product-zoom--thumb-scroller" data-photoswipe-thumb-scroller></div>
+      </div>
+    </div>
+    {% comment %}Inject product-gallery-zoom end{% endcomment %}
+
+        {% comment %} START Evidon {% endcomment %}
+        <script defer src="https://c.evidon.com/dg/dg.js" companyid="6741"></script>
+
+        <script type="text/javascript">
+          document.addEventListener("DOMContentLoaded", () => {
+              (function (id) {
+              function append(scriptid, url, async) {
+                var d = document, sn = 'script', f = d.getElementsByTagName(sn)[0];
+                if (!f) f = d.head;
+                var s = d.createElement(sn);
+                s.async = async;
+                s.id = scriptid;
+                s.src = url;
+                s.charset = 'utf-8';
+                f.parentNode.insertBefore(s, f);
+              }
+      
+              function is2parttld(value) {
+                var tldindicators = ['co', 'com', 'info', 'web', 'info', 'gov', 'edu', 'biz', 'net', 'org'];
+                var countryindicators = ['uk', 'us', 'fr', 'es', 'de', 'at', 'au', 'ae', 'be', 'br', 'ca', 'ch', 'cn', 'co', 'cz', 'dk', 'eg', 'eu', 'fi', 'gb', 'gr', 'hk', 'hr', 'hu', 'ie', 'in', 'jp', 'mx', 'nl', 'no', 'nz', 'pl', 'ro', 'ru', 'se'];
+                return (tldindicators.indexOf(value) !== -1 || countryindicators.indexOf(value) !== -1);
+              }
+      
+              function getRootDomain() {
+                var parts = window.location.hostname.split('.');
+                if (parts.length === 2) rootDomain = parts[0];
+                else if (parts.length > 2) {
+                  // see if the next to last value is a common tld
+                  var part = parts[parts.length - 2];
+                  if (is2parttld(part)) {
+                    rootDomain = parts[parts.length - 3]; // go back one more
+                  }
+                  else {
+                    rootDomain = part;
+                  }
+                }
+      
+                return rootDomain;
+              }
+      
+              window.evidon = {};
+              window.evidon.id = id;
+              window.evidon.test = false;  // set to true for non-production testing.
+              //window.evidon.userid = '';
+      
+              var cdn = '//c.evidon.com/', rootDomain = getRootDomain(), noticecdn = cdn + 'sitenotice/';
+              append('evidon-notice', noticecdn + 'evidon-sitenotice-tag.js', false);
+              append('evidon-location', cdn + 'geo/country.js', true);
+              append('evidon-themes', noticecdn + id + '/snthemes.js', true);
+              if (rootDomain) append('evidon-settings', noticecdn + id + '/' + rootDomain + (window.evidon.test ? '/test' : '') + '/settings.js', true);
+      
+              window.evidon.priorConsentCallback = function (categories, vendors, cookies) {
+                // add the tags which need to wait for prior consent
+                // here.  This should be all your advertising tags and
+                // probably most of your social and tracking tags.
+                var handlers = {
+                  categories: {
+                    'advertiser': 'handleAdvertiser',
+                    'ad exchange': 'handleAdExchange',
+                    'ad network': 'handleAdNetwork',
+                    'ad server': 'handleAdServer',
+                    'ad verification': 'handleAdVerification',
+                    'agency': 'handleAgency',
+                    'analytics provider': 'handleAnalyticsProvider',
+                    'business intelligence': 'handleBusinessIntelligence',
+                    'content management/saas': 'handleContentManagementSaaS',
+                    'creative/ad format technology': 'handleCreativeAdFormatTechnology',
+                    'data aggregator/supplier': 'handleDataAggregatorSupplier',
+                    'data management platform': 'handleDataManagementPlatform',
+                    'demand side platform': 'handleDemandSidePlatform',
+                    'marketing solutions': 'handleMarketingSolutions',
+                    'mobile': 'handleMobile',
+                    'online privacy platform': 'handleOnlinePrivacyPlatform',
+                    'optimizer': 'handleOptimizer',
+                    'other': 'handleOther',
+                    'publisher': 'handlePublisher',
+                    'research provider': 'handleResearchProvider',
+                    'retargeter': 'handleRetargeter',
+                    'social media': 'handleSocialMedia',
+                    'supply side platform': 'handleSupplySidePlatform',
+                    'tag manager': 'handleTagManager',
+                    'video': 'handleVideo',
+                    'website optimization': 'handleWebsiteOptimization',
+                  },
+                  vendors: {}
+                };
+      
+                for (var category in categories) {
+                  if (!categories[category]) continue;
+                  var handler = window.evidon[handlers.categories[category]];
+                  if (typeof handler === 'function') handler();
+                }
+                for (var vendor in vendors) {
+                  if (!vendors[vendor]) continue;
+                  var handler = window.evidon[handlers.vendors[vendor]];
+                  if (typeof handler === 'function') handler();
+                }
+              }
+      
+              window.evidon.closeCallback = function () {
+                // this is executed if the user closed a UI element without either Accepting (providing consent)
+                // or Declining (declining to provide consent).
+              }
+      
+              window.evidon.consentWithdrawnCallback = function () {
+                // this is exeucted if the user withdraws consent and elects to
+                // no longer allow technologies to run on the site.
+              }
+      
+              window.evidon.consentDeclinedCallback = function () {
+                // this is executed if the user explicitly declines giving consent by
+                // using a Decline button
+                window.evidon.notice.dropSuppressionCookie(30);
+                console.log('declined consent');
+              }
+            })(6741);
+      
+          })
+ </script>
+        {% comment %} END Evidon {% endcomment %} 
+
+
+    {%- if template contains 'customer' -%}
+      {{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+      {{ 'customer_area.js' | shopify_asset_url | script_tag }}
+    {%- endif -%}
+
+    {% unless settings.reduce_animations %}
+      <script>
+        (
+          function () {
+            var classes = {
+              block: 'pxu-lia-block',
+              element: 'pxu-lia-element',
+            };
+
+            document
+              .querySelectorAll('[type="application/pxs-animation-mapping+json"]')
+              .forEach(function (mappingEl) {
+                const section = mappingEl.parentNode;
+                try {
+                  const mapping = JSON.parse(mappingEl.innerHTML);
+                  mapping.elements.forEach(function (elementSelector) {
+                    section
+                      .querySelectorAll(elementSelector)
+                      .forEach(function (element) { element.classList.add(classes.element); });
+                  });
+
+                  mapping.blocks.forEach(function (blockSelector) {
+                    section
+                      .querySelectorAll(blockSelector)
+                      .forEach(function (block) { block.classList.add(classes.block); });
+                  });
+                } catch (error) {
+                  console.warn('Unable to parse animation mapping', mappingEl, error);
+                }
+            });
+          }
+        )()
+      </script>
+    {% endunless %}
+
+    <script
+      src="{{ 'theme.min.js' | asset_url }}"
+      data-scripts
+      data-shopify-api-url="{{ 'api.jquery.js' | shopify_asset_url }}"
+      data-shopify-countries="/services/javascripts/countries.js"
+      data-shopify-common="{{ 'shopify_common.js' | shopify_asset_url }}"
+      data-shopify-cart="{{ 'jquery.cart.js' | asset_url }}"
+      data-pxu-polyfills="{{ 'polyfills.js' | asset_url }}"
+    >
+    </script>
+
+    {% render 'structured-data' %}
+
+    <script>
+    (function () {
+      function handleFirstTab(e) {
+        if (e.keyCode === 9) { // the "I am a keyboard user" key
+          document.body.classList.add('user-is-tabbing');
+          window.removeEventListener('keydown', handleFirstTab);
+        }
+      }
+      window.addEventListener('keydown', handleFirstTab);
+    })();
+    </script>
+
+    {% unless settings.reduce_animations %}
+      {% comment %}begin rb_critical_css{% endcomment %}
+      {% capture css %}
+      {{ 'ripple.css' | asset_url | stylesheet_tag }}
+      {% endcapture %}
+      {% render 'renderbetter-code', css: css %}
+      {% comment %}end rb_critical_css{% endcomment %}
+    {% endunless %}
+
+    {% comment %}
+    RB - Comment: This script has been removed because it is essentially useless in Shopify
+    <script
+      src="{{ 'instantPage.min.js' | asset_url }}"
+      type="module"
+      defer
+    >
+    </script>
+    {% endcomment %}
+
+    {% comment %}Attentive script{% endcomment %}
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+    <script src="https://cdn.attn.tv/lovewellness/dtag.js"></script>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'chat', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+      {% comment %}Klarna script{% endcomment %}
+      <script>window.KlarnaThemeGlobals={};{%case template.name%} {%when"product"%} window.KlarnaThemeGlobals.data_purchase_amount={{product.first_available_variant.price}};window.KlarnaThemeGlobals.productVariants={{product.variants|json}};window.KlarnaThemeGlobals.documentCopy=document.cloneNode(true);{%when"cart"%} window.KlarnaThemeGlobals.data_purchase_amount={{cart.total_price}};window.KlarnaThemeGlobals.documentCopy=document.cloneNode(true);{%endcase%}</script>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'btf-feature', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
+    {% comment %}Klaviyo{% endcomment %}
+    <script type="application/javascript" async src="https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=JSn68Z"></script>
+    {% comment %} Start Klaviyo Viewed Page Metric {% endcomment %}
+      {% if request.path == '/' %}
+        <script>
+          var _learnq = _learnq || []; 
+          var page = window.location.href;
+          _learnq.push(['track', 'Viewed Homepage',
+          {PageName: "Homepage"}
+          ]);
+        </script>
+      {% endif %}
+      {% if template.suffix == 'subscriptions-sale' %}
+        <script type="text/javascript">
+          var _learnq = _learnq || [];
+          _learnq.push(['track', 'Viewed Page', {
+          PageName: "Subscriptions"}
+          ]);
+        </script>
+      {% endif %}
+      {% if template.suffix contains 'new-year-new-you' %}
+        <script type="text/javascript">
+          var _learnq = _learnq || [];
+          _learnq.push(['track', 'Viewed Page', {
+          PageName: "NYNY2022"}
+          ]);
+        </script>
+      {% endif %}
+    {% comment %} End Klaviyo Viewed Page Metric {% endcomment %}
+
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+      {% comment %}UserWay Accessibility widget{% endcomment %}
+      <script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "4kKOWrBIgI");s.setAttribute("src", "https://accessibilityserver.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script><noscript>Please ensure Javascript is enabled for purposes of <a href="https://accessibilityserver.org">website accessibility</a></noscript>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'chat', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
+    {% comment %}begin rb_code{% endcomment %}
+    {% comment %}This code must come before the end of the body tag{% endcomment %}
+    {% render 'renderbetter-code', place: 'body-bottom' %}
+    {% comment %}end rb_code{% endcomment %}
+    
+    {% comment %}UserWay Accessibility widget{% endcomment %}
+    <script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "4kKOWrBIgI");s.setAttribute("src", "https://accessibilityserver.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script><noscript>Please ensure Javascript is enabled for purposes of <a href="https://accessibilityserver.org">website accessibility</a></noscript>
+
+
+    <!-- START PebblePost PageViews Tracking Body -->
+    <script>
+      window._pp = window._pp || [];
+      _pp.brid = "2697";    
+      {% if customer.id %}
+      _pp.brcid = "{{ customer.id }}"; 
+      {% endif %}
+      {% if customer.email %} // Optional
+      _pp.email = "{{ customer.email }}"; // Optional
+      {% endif %} // Optional
+      (function() {
+      var ppjs = document.createElement('script');
+      ppjs.type = 'text/javascript';
+      ppjs.async = true;
+      ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') +
+      '//cdn.pbbl.co/r/' + _pp.brid + '.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ppjs, s);
+      })();
+    </script>
+  <!-- END PebblePost PageViews Tracking Body -->
+
+  </body>
+</html>

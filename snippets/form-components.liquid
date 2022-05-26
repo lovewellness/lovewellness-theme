@@ -1,0 +1,89 @@
+{% comment %}
+  A "Kitchen sink" of form elements and their classes, so that
+  form elements can be created easily and consistently
+{% endcomment %}
+
+<div class="page-content">
+  <div class="form-field">
+    <input type="text" class="form-field-input form-field-text" placeholder="Input">
+    <label class="form-field-title">Input</label>
+  </div>
+
+  <div class="form-field">
+    <input type="text" value="Foobar" class="form-field-input form-field-text">
+    <label class="form-field-title">Input</label>
+  </div>
+
+  <div class="form-field">
+    <input type="password" class="form-field-input form-field-password">
+    <label class="form-field-title">Input with password</label>
+  </div>
+
+  <div class="form-field">
+    <div class="form-field-select-wrapper">
+      <select class="form-field-input form-field-select">
+        {% for i in (1..5) %}
+          <option value="{{ i }}">Option {{ i }}</option>
+        {% endfor %}
+      </select>
+      <label class="form-field-title">Select</label>
+      {% render 'icon-chevron-down-small' %}
+    </div>
+  </div>
+
+  <div class="form-field">
+    <textarea class="form-field-input form-field-textarea"></textarea>
+    <label class="form-field-title">Textarea</label>
+  </div>
+
+  <div class="form-field">
+    <input type="text" class="form-field-input form-field-text">
+    <label class="form-field-title">Input</label>
+  </div>
+
+  <div class="form-field">
+    <input type="number" class="form-field-input form-field-number">
+    <label class="form-field-title">Number</label>
+  </div>
+
+  <div class="form-fields-inline">
+    <div class="form-field">
+      <input type="text" class="form-field-input form-field-text">
+      <label class="form-field-title">Input</label>
+    </div>
+
+    <div class="form-field">
+      <input type="text" class="form-field-input">
+      <label class="form-field-title">Input</label>
+    </div>
+  </div>
+
+  <div class="form-fields-inline">
+    <div class="form-field">
+      <input type="text" class="form-field-input">
+      <label class="form-field-title">Input</label>
+    </div>
+
+    <div class="form-field">
+      <input type="text" class="form-field-input">
+      <label class="form-field-title">Input</label>
+    </div>
+  </div>
+
+  <div class="form-fields-inline">
+    <div class="form-field">
+      <input type="text" class="form-field-input">
+      <label class="form-field-title">Newsletter</label>
+    </div>
+
+    <div class="form-field">
+      <button class="button">Submit</button>
+    </div>
+  </div>
+
+  <div class="form-field">
+    <input type="text" class="form-field-input form-field-search">
+    <label class="form-field-title">Input</label>
+    <button class="button">Search</button>
+  </div>
+</div>

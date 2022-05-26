@@ -1,0 +1,159 @@
+{% if section.settings.show_product_subscriptions %}
+  <div data-product-subscription>
+    {% for block in section.blocks %}
+      {% render block %}
+    {% endfor %}
+  </div>
+<script>
+(function() {
+  
+
+//   function striked(maxmin){
+    
+//       var inputs = document.getElementsByClassName('rc_label_test');
+
+//       inputs.forEach(el => el.addEventListener('click', event => {
+//         setTimeout(function(){
+//           var price = document.getElementsByClassName('price__current')[0].getElementsByClassName('money')[0].innerText;
+//           if(maxmin=="max"){
+//             var before = document.querySelector('.money.price__current--max').innerText;
+//           } else if(maxmin=="min") {
+//           	var before = document.querySelector('.money.price__current--min').innerText;
+//           } else {
+//             var before = document.querySelector('.price__current--hidden[data-current-price-hidden] .money').innerText;
+//           }
+//           before = before.replace(/(\r\n|\n|\r|\s)/gm, "");
+//           console.log(before);
+//           //var before = document.querySelector('.money.price__compare-at--max').innerText;
+          
+//           if(price!=before && price<before){
+//             var newNode = document.createElement("span");
+//             newNode.className = "sale-before";
+//             var textNode = document.createTextNode(before);
+//             newNode.appendChild(textNode);
+
+//             var isExist = document.getElementsByClassName('sale-before');
+//             if (isExist.length== 0) {
+//               var list = document.getElementsByClassName('price__current')[0];
+//               list.insertBefore(newNode, list.children[0]); 
+
+
+//             }
+
+//             if ( document.getElementsByClassName('sale-before')[0] ) {
+//               document.getElementsByClassName('sale-before')[0].classList.remove('sale-hidden');
+//             }
+
+//           } else {
+
+//             if ( document.getElementsByClassName('sale-before')[0] ) {
+//               document.getElementsByClassName('sale-before')[0].classList.add('sale-hidden');
+//             }
+
+
+//           }
+//   //         console.log('price: '+price);
+//           //console.log(before);
+//         },600)
+//       }));
+//     }
+    
+  
+//   setTimeout(function(){  
+//     striked();
+//   },1000)
+  
+  
+
+
+  
+//     if(document.getElementById('data-variant-option-0') !== null) {
+//      document.getElementById('data-variant-option-0').addEventListener('change', function() {
+//        setTimeout(function(){
+//        	if(document.getElementById('data-variant-option-0').getAttribute('data-variant-option-chosen-value')=='30 Day Supply'){
+//         	console.log('30');
+//           striked('min');
+//         } else {
+//         	console.log('90');
+//           striked('max');
+//         };
+         
+//        },500);
+//        //location.reload(); 
+//      });
+//    };
+  
+ 
+  
+})();
+
+</script>
+<style>
+  
+.product__price .price__current {
+  display: flex;
+}
+  
+.sale-before {
+	display: inline-block;
+	position: relative;
+	font-size: 16px;
+    order: 1;
+}
+  
+.sale-before::after {
+	content: "";
+	width: 94%;
+	height: 1px;
+	background: #000;
+	display: block;
+	position: absolute;
+	left: 3px;
+	top: 50%;
+} 
+  
+.sale-before::before {
+	content: " ";
+	white-space: pre;
+}
+  
+.sale-before.sale-hidden {
+	display: none;
+}
+  
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product subscriptions",
+  "class": "product-subscriptions--section",
+  "max_blocks": 1,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_product_subscriptions",
+      "label": "Show product subscriptions",
+      "info": "Add an OrderGroove Subcription block to all products using this template.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "product_subscriptions_heading",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+      {
+        "type": "@app"
+      }
+  ],
+  "presets": [
+    {
+      "category": "Product Information",
+      "name": "Product Subscriptions"
+    }
+  ]
+}
+
+{% endschema %}

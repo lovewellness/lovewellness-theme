@@ -1,0 +1,21 @@
+{% comment %}
+  @param class_root {String}
+    Base class root
+{% endcomment %}
+
+{% if product.metafields.custom_fields["text_badges"] != blank %}
+  <div class="badges-texts badges-texts--{{ class_root }}">
+    {% for item in product.metafields.custom_fields["text_badges"] %}
+      <span 
+        class="badges-texts__item"
+        {% if item["badge_color"] != blank %}
+          style="background-color: #{{ item['badge_color'] }};"
+        {% endif %}
+      >
+        {% if item["badge_text"] != blank %}
+          {{ item["badge_text"] }}
+        {% endif %}
+      </span>
+    {% endfor %}
+  </div>
+{% endif %}

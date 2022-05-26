@@ -1,0 +1,91 @@
+{% liquid
+  if section.settings.title != blank
+    assign page_title = section.settings.title
+  else
+    assign page_title = page.title
+  endif
+%}
+
+<article class="site-page" data-template-page data-template-faq>
+  <header class="page-masthead"><h1 class="page-title">{{page_title}}</h1></header>
+  <section class="section section--faq faq  faq--{{ section.id }}" {{ section.shopify_attribtes }}>
+    <style>.faq-tab .faq-tab__title span {color: {{ section.settings.inactive_color }}; border-bottom: 2px solid transparent;} .faq-tab.faq-tab--open .faq-tab__title span {color: {{ section.settings.active_color }}; border-bottom-color: {{ section.settings.active_color }};} </style>
+    <div class="faq-tabs">
+      {% assign faq_tabs = section.settings.faq_tabs | split: ',' %}
+      {% for faq_tab in faq_tabs %}
+        <div class="faq-tab">
+          <button type="button" class="faq-tab__title" data-handle="{{ faq_tab | handle }}" role="tab">
+            <span>{{ faq_tab }}</span>
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+    <script>
+    (function() {
+
+      function isMobile() {
+        return window.innerWidth <= 960;
+      }
+
+      function triggerFirstClick() {
+        $('.faq-tab__title').first().trigger('click');
+      }
+
+      function setInitialPanel() {
+        var handle = window.location.hash;
+        if ( handle )  {
+          handle = handle.replace('#', '');
+          $('.faq-tab__title[data-handle="'+ handle +'"]').trigger('click');
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        $(document).on('click', '.faq-tab__title', function() {
+          var _this = $(this);
+          var handle = _this.attr('data-handle');
+          $('.faq-tab').removeClass('faq-tab--open');
+          _this.parent().addClass('faq-tab--open');
+          $("main").find('.shopify-section').removeClass('faq-section--open');
+          $("main").find(`[data-tab='${handle}']`).parent().addClass('faq-section--open');
+        });
+
+        triggerFirstClick();
+      });
+
+      document.addEventListener('shopify:section:load', triggerFirstClick);
+      document.addEventListener('DOMContentLoaded', setInitialPanel);
+    })();
+    </script>
+  </section>
+</article>
+
+{% schema %}
+{
+  "name": "FAQ Page Settings",
+  "settings": [
+    {
+      "type":"text",
+      "id":"title",
+      "label":"Page Title"
+    },
+    {
+      "type":"textarea",
+      "id":"faq_tabs",
+      "label":"Tabs",
+      "info":"Comma separated list of FAQ Tabs"
+    },
+    {
+      "type": "color",
+      "id": "inactive_color",
+      "label": "Inactive Tab color",
+      "default": "#636767"
+    },
+    {
+      "type": "color",
+      "id": "active_color",
+      "label": "Active Tab color",
+      "default": "#03556A"
+    }
+  ]
+}
+{% endschema %}
