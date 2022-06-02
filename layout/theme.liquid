@@ -50,7 +50,7 @@
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
     <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
-     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.42&shop=dirt-project.myshopify.com"></script>
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.43&shop=dirt-project.myshopify.com"></script>
 <!-- End BlackCrow Script Tag -->
     {% endcapture %}
     {% render 'renderbetter-code', defer: 'analytics', code: code %}
@@ -139,6 +139,7 @@
         {% endif %}
 
         {% assign meta_data_price = product.price | times: meta_data_discount_amount | money_without_currency | remove: ',' %}
+    	{% assign default_data_price = product.price | money_without_currency | remove: ',' %}
         {% comment %} Price Manipulator for Microdata Schema for Google {% endcomment %}
 
         <meta property="product:price:amount" content="{{ meta_data_price }}">
@@ -827,31 +828,8 @@
     </script>
   <!-- END PebblePost PageViews Tracking Body -->
 
+
     
-  <!-- START Nosto-->
-  <script type="text/javascript" src="//connect.nosto.com/include/shopfiy-12883849" async></script>
-  <div class="nosto_page_type" style="display:none">order</div>
-  <div class="nosto_purchase_order" style="display:none">
-    <span class="order_number">{{ order_number }}</span>
-    <div class="buyer">
-      <span class="email">{{ customer.email }}</span>
-      <span class="first_name">{{ customer.first_name }}</span>
-      <span class="last_name">{{ customer.last_name }}</span>
-    </div>
-    <div class="purchased_items">
-      <div data-gb-custom-block data-tag="for">
-      <div class="line_item">
-          <span class="product_id">{{ line_item.product.id }}</span>
-          <span class="sku_id">{{ line_item.variant_id }}</span>
-          <span class="quantity">{{ line_item.quantity }}</span>
-          <span class="name">{{ line_item.title }}</span>
-          <span class="unit_price">{{ line_item.price | money_without_currency }}</span>
-          <span class="price_currency_code">{{ shop.currency }}</span>
-      </div>
-  </div>
-    </div>
-  </div>
-  <!-- END Nosto-->
-    
-  </body>
+  {% render 'nosto-tagging' %}
+</body>
 </html>

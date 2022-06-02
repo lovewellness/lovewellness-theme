@@ -563,10 +563,6 @@
   //document.addEventListener("DOMContentLoaded", checkForOffers);
   // On variant change, update the OG widget to select opt in or opt out based on theme settings
   variantInput.addEventListener('change', checkForOffers);
-  
-  /*document.addEventListener("DOMContentLoaded", function() {
-  	document.querySelectorAll('og-optout-button')[0].dispatchEvent(new Event('click'));
-  });*/
 
   document.addEventListener('click', function (event) {
     
@@ -586,3 +582,8 @@
   }, false);
 
 </script>
+{% render 'nosto-element', id:'productpage-nosto-1' %}
+
+{% render 'nosto-element', id:'productpage-nosto-2' %}
+
+{% render 'nosto-element', id:'productpage-nosto-3' %}

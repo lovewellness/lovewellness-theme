@@ -7,6 +7,16 @@
 <script>
 (function() {
   
+  var inputs = document.getElementsByClassName('rc_label_test');
+
+  Array.from(inputs).forEach(el => el.addEventListener('click', event => {
+    if(el.querySelector('.rc-custom-label-test').classList.contains('subscription-label')){
+      document.getElementsByTagName('klarna-placement')[0].style.display='none';
+    }else{
+      document.getElementsByTagName('klarna-placement')[0].style.display='inline-block';
+    }
+  }));
+  
 
 //   function striked(maxmin){
     
