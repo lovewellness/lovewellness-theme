@@ -269,7 +269,14 @@
     <!--begin-boost-pfs-filter-css-->
     {% render 'boost-pfs-style' %}
     <!--end-boost-pfs-filter-css-->    
-    <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
+
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+        <script defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'analytics', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
+
   {% include 'store-credit-launcher' %}
 </head>
 
