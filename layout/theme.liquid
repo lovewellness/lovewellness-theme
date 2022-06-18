@@ -281,11 +281,7 @@
 </head>
 
   <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
-    <script
-      async
-      src="https://na-library.klarnaservices.com/lib.js"
-      data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
-    ></script>
+
     
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come right after the start of the body tag{% endcomment %}
@@ -710,7 +706,16 @@
       </script>
     {% endunless %}
     
-
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+    <script
+        async
+        src="https://na-library.klarnaservices.com/lib.js"
+        data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
+      ></script>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'enhancement', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
 
     <script
       src="{{ 'theme.min.js' | asset_url }}"
