@@ -28,8 +28,7 @@
 {%- endunless -%}
     <link rel="preload" as="style" href="{{ 'boost-pfs-custom.css' | asset_url }}">
     
-    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
-    {{ 'splide.min.js' | asset_url | script_tag }}
+
 
     {% render 'preload-hints' %}
 
@@ -542,6 +541,11 @@
         <div class="product-zoom--thumb-scroller" data-photoswipe-thumb-scroller></div>
       </div>
     </div>
+
+    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
+    {{ 'splide.min.js' | asset_url | script_tag }}
+
+
     {% comment %}Inject product-gallery-zoom end{% endcomment %}
 
         {% comment %} START Evidon {% endcomment %}
