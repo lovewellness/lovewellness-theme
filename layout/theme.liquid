@@ -809,27 +809,32 @@
     {% comment %}end rb_code{% endcomment %}
     
 
-    <!-- START PebblePost PageViews Tracking Body -->
-    <script>
-      window._pp = window._pp || [];
-      _pp.brid = "2697";    
-      {% if customer.id %}
-      _pp.brcid = "{{ customer.id }}"; 
-      {% endif %}
-      {% if customer.email %} // Optional
-      _pp.email = "{{ customer.email }}"; // Optional
-      {% endif %} // Optional
-      (function() {
-      var ppjs = document.createElement('script');
-      ppjs.type = 'text/javascript';
-      ppjs.async = true;
-      ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') +
-      '//cdn.pbbl.co/r/' + _pp.brid + '.js';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(ppjs, s);
-      })();
-    </script>
-  <!-- END PebblePost PageViews Tracking Body -->
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+        <!-- START PebblePost PageViews Tracking Body -->
+        <script>
+          window._pp = window._pp || [];
+          _pp.brid = "2697";    
+          {% if customer.id %}
+          _pp.brcid = "{{ customer.id }}"; 
+          {% endif %}
+          {% if customer.email %} // Optional
+          _pp.email = "{{ customer.email }}"; // Optional
+          {% endif %} // Optional
+          (function() {
+          var ppjs = document.createElement('script');
+          ppjs.type = 'text/javascript';
+          ppjs.async = true;
+          ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') +
+          '//cdn.pbbl.co/r/' + _pp.brid + '.js';
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(ppjs, s);
+          })();
+        </script>
+      <!-- END PebblePost PageViews Tracking Body -->
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'analytics', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
 
     
   {% render 'nosto-tagging' %}
