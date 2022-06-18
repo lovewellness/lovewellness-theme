@@ -251,7 +251,15 @@
 
                 <form data-payment-terms-target style="display: none;"></form>
               </div>
-
+          
+			  <!-- Placement v2 -->
+              <klarna-placement
+                data-key="credit-promotion-badge"
+                data-locale="en-US"
+                data-purchase-amount="{{ product.price }}"
+              ></klarna-placement>
+              <!-- end Placement -->
+          
             {% when 'sku' %}
               {% unless onboarding %}
                 <div
@@ -410,6 +418,7 @@
   </div>
 {% endif %}
 
+{% render 'sticky-mobile-cart' %}
 
 <script type="text/javascript">
   

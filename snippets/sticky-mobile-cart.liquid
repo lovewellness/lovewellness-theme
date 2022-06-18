@@ -1,0 +1,835 @@
+<div class="sticky-mobile-cart" data-product-form-area>
+  {% if is_product_modal %}
+  	<div data-product-quickshop-message class="product-message--container"></div>
+  {% endif %}
+
+{% comment %}
+  @param product
+
+  @param selected_variant
+
+  @param show_dynamic_checkout_button {Boolean}
+    If true, show dynamic checkout button
+{% endcomment %}
+
+{% if is_product_modal and show_dynamic_checkout_button %}
+  {% assign quickshop_smart_buttons = true %}
+{% endif %}
+
+{% if is_product_modal == false and show_dynamic_checkout_button %}
+  {% assign product_smart_buttons = true %}
+{% endif %}
+
+{% if product.selling_plan_groups.size > 0 %}
+  {% assign show_dynamic_checkout_button = false %}
+{% endif %}
+
+{% if selected_variant.available == false %}
+  {% assign quickshop_smart_buttons = false %}
+  {% assign product_smart_buttons = false %}
+{% endif %}
+
+{% assign product_form_class = '' %}
+
+{% if show_dcb %}
+  {% if product_smart_buttons or quickshop_smart_buttons %}
+    {% assign product_form_class = 'smart-payment-enabled' %}
+  {% endif %}
+{% endif %}
+
+{% form 'product', product, class: product_form_class, data-product-form: '' %}
+  {% comment %}
+    Display variant options for a product
+
+    @param product
+    @param selected_variant
+    @param style
+
+    @param enable_swatches
+    @param swatches_shape
+    @param swatches_option_trigger
+    @param swatches_option_style
+    @param swatches_product_page_size
+    @param swatch_colors
+
+    @param select_main_classes
+    @param select_classes
+    @param input_select_wrapper_classes
+    @param input_select_classes
+    @param input_select_label_classes
+    @param input_select_chevron_classes
+
+    @param radios_classes
+    @param option_header_classes
+    @param option_name_classes
+    @param option_values_classes
+    @param option_value_classes
+    @param option_value_label_classes
+    @param option_value_input_classes
+    @param option_value_name_classes
+
+    @param swatches_classes
+    @param option_swatch_wrapper_classes
+    @param option_swatch_classes
+    @param option_swatch_inner_classes
+  {% endcomment %}
+  {% assign product = product %}
+  {% assign selected_variant = selected_variant %}
+  {% assign style = settings.product_option_style %}
+  {% assign enable_swatches = settings.swatches_enable %}
+  {% assign swatches_shape = settings.swatches_shape %}
+  {% assign swatches_option_trigger = settings.swatches_swatch_trigger %}
+  {% assign swatches_option_style = settings.swatches_option_style %}
+  {% assign swatches_product_page_size = settings.swatches_product_page_size %}
+  {% assign swatches_custom_colors = settings.swatches_custom_colors %}
+  {% assign select_main_classes = 'form-options' %}
+  {% assign select_classes = 'form-field form-options' %}
+  {% assign input_select_wrapper_classes = 'form-field-select-wrapper' %}
+  {% assign input_select_classes = 'form-field-input form-field-select' %}
+  {% assign input_select_label_classes = 'form-field-title' %}
+  {% assign radios_classes = 'form-options form-options-selectable-boxes' %}
+  {% assign option_header_classes = 'option-header' %}
+  {% assign option_name_classes = 'option-name' %}
+  {% assign option_values_classes = 'option-values' %}
+  {% assign option_value_classes = 'option-value' %}
+  {% assign option_value_label_classes = 'option-value-label' %}
+  {% assign option_value_input_classes = 'option-value-input' %}
+  {% assign option_value_name_classes = 'option-value-name' %}
+  {% assign swatches_classes = 'form-options form-options-swatches' %}
+  {% assign option_swatch_wrapper_classes = 'option-value-name option-value-swatch-wrapper' %}
+  {% assign option_swatch_classes = 'swatch' %}
+  {% assign option_swatch_inner_classes = 'swatch-inner' %}
+
+  {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui begin{% endcomment %}
+  {% comment %}
+    Display variant options for a product
+  
+    @param product
+    @param selected_variant
+    @param style
+  
+    @param enable_swatches
+    @param swatches_shape
+    @param swatches_option_trigger
+    @param swatches_option_style
+    @param swatches_product_page_size
+    @param swatch_colors
+  
+    @param select_main_classes
+    @param select_classes
+    @param input_select_wrapper_classes
+    @param input_select_classes
+    @param input_select_label_classes
+    @param input_select_chevron_classes
+  
+    @param radios_classes
+    @param option_header_classes
+    @param option_name_classes
+    @param option_values_classes
+    @param option_value_classes
+    @param option_value_label_classes
+    @param option_value_input_classes
+    @param option_value_name_classes
+  
+    @param swatches_classes
+    @param option_swatch_wrapper_classes
+    @param option_swatch_classes
+    @param option_swatch_inner_classes
+  {% endcomment %}
+  
+  {% if product.has_only_default_variant %}
+    <input
+      class="
+        variants-ui
+        variants-ui--default-variant
+      "
+      name="id"
+      type="hidden"
+      value="{{ product.variants.first.id }}"
+      data-variants-ui
+      data-variants
+    >
+  {% else %}
+    {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-options begin{% endcomment %}
+    {% comment %}
+      Display variant options for a product
+    
+      @param product
+      @param selected_variant
+      @param style
+    
+      @param enable_swatches
+      @param swatches_shape
+      @param swatches_option_trigger
+      @param swatches_option_style
+      @param swatches_product_page_size
+      @param swatch_colors
+    
+      @param select_main_classes
+      @param select_classes
+      @param input_select_wrapper_classes
+      @param input_select_classes
+      @param input_select_label_classes
+      @param input_select_chevron_classes
+    
+      @param radios_classes
+      @param option_header_classes
+      @param option_name_classes
+      @param option_values_classes
+      @param option_value_classes
+      @param option_value_label_classes
+      @param option_value_input_classes
+      @param option_value_name_classes
+    
+      @param swatches_classes
+      @param option_swatch_wrapper_classes
+      @param option_swatch_classes
+      @param option_swatch_inner_classes
+    {% endcomment %}
+    
+    {% assign hide_select_a11y = "" %}
+    
+    {% if style == 'radio' %}
+      {% assign hide_select_a11y = "tabindex='-1'" %}
+    {% endif %}
+    
+    {%- capture form_id -%}{% increment form_id %}{%- endcapture -%}
+    
+    <div
+      class="
+        variants-ui
+        {%
+          if enable_swatches
+          and swatches_shape == 'square'
+          and swatches_option_style == 'variant_image'
+        %}
+          variants-ui--swatches-square
+        {% endif %}
+      "
+      data-variants-ui
+    >
+      <select
+        class="
+          variants-ui__select-main
+          {{ select_main_classes }}
+        "
+        name="id"
+        {{ hide_select_a11y }}
+        data-variants
+      >
+        <option
+          value=""
+          disabled
+          {% if selected_variant %}selected{% endif %}
+        >
+          {{ 'product.variants.choose_variant' | t }}
+        </option>
+        {% for variant in product.variants %}
+          <option
+            {% if selected_variant and selected_variant.id == variant.id %}selected{% endif %}
+            value="{{ variant.id }}"
+            {% unless variant.available %}disabled{% endunless %}
+            data-variant-id="{{ variant.id }}"
+            data-sku="{{ variant.sku }}"
+          >
+            {{ variant.title }} - {{ variant.price | money }}
+          </option>
+        {% endfor %}
+      </select>
+    
+      {% for option in product.options_with_values %}
+        {% assign option_index = forloop.index0 %}
+        {% assign show_swatches = false %}
+        {% if enable_swatches %}
+          {%- assign swatches_option_trigger = swatches_option_trigger | strip | downcase -%}
+          {%- assign option_name = option.name | strip | downcase -%}
+    
+          {% if option_name == swatches_option_trigger %}
+            {% assign show_swatches = true %}
+            {% assign swatch_option_key = 'option' | append: forloop.index %}
+          {% endif %}
+        {% endif %}
+    
+        {% if style == 'select' and show_swatches == false %}
+          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-select begin{% endcomment %}
+          {% comment %}
+            Display variant options for a product
+          
+            @param selected_variant
+          
+            @param select_classes
+            @param input_select_wrapper_classes
+            @param input_select_classes
+            @param input_select_label_classes
+            @param input_select_chevron_classes
+          {% endcomment %}
+          
+          <div
+            class="
+              variants-ui__select
+              {% if forloop.first %}variants-ui__select--first{% endif %}
+              {% if forloop.last %}variants-ui__select--last{% endif %}
+              {{ select_classes }}
+            "
+          >
+            <div
+              class="
+                variants-ui__input-select-wrapper
+                {{ input_select_wrapper_classes }}
+              "
+            >
+              <select
+                id="data-variant-option-{{ option_index }}"
+                class="
+                  variants-ui__input-select
+                  {{ input_select_classes }}
+                "
+                data-variant-option
+                data-variant-option-index="{{ option_index }}"
+                data-variant-option-chosen-value="{% if selected_variant %}{{ option.selected_value }}{% else %}false{% endif %}"
+              >
+                
+                {% for value in option.values %}
+                  <option
+                    value="{{ value | escape }}"
+                    {% if selected_variant and option.selected_value == value %}selected{% endif %}
+                    data-variant-option-value-wrapper
+                    data-variant-option-value
+                    data-variant-option-value-index="{{ option_index }}"
+                  >
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+              <label
+                class="
+                  variants-ui__input-select-label
+                  {{ input_select_label_classes }}
+                "
+                for="data-variant-option-{{ forloop.index0 }}"
+                data-variant-option-name="{{ option.name }}"
+                data-variant-option-choose-name="{{ 'product.variants.choose_option' | t: option: option.name }}"
+              >
+                {% if selected_variant %}
+                  {{ option.name }}
+                {% else %}
+                  {{ 'product.variants.choose_option' | t: option: option.name }}
+                {% endif %}
+              </label>
+              <div
+                class="
+                  variants-ui__input-select-chevron
+                  {{ input_select_chevron_classes }}
+                "
+              >
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  role="presentation"
+                  width="8"
+                  height="6"
+                  viewBox="0 0 8 6"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M4 4.5L7 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+                  <path d="M4 4.5L1 1.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="square"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-select end{% endcomment %}
+    
+        {% elsif style == 'radio' or show_swatches == true %}
+          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-radios begin{% endcomment %}
+          {% comment %}
+            Display variant options for a product
+          
+            @param selected_variant
+          
+            @param radios_classes
+            @param option_header_classes
+            @param option_name_classes
+            @param option_values_classes
+            @param option_value_classes
+            @param option_value_label_classes
+            @param option_value_input_classes
+            @param option_value_name_classes
+          
+            @param swatches_classes
+            @param option_swatch_wrapper_classes
+            @param option_swatch_classes
+            @param option_swatch_inner_classes
+          {% endcomment %}
+          
+          <fieldset
+            class="
+              {% unless show_swatches %}
+                variants-ui__radios
+                {% if forloop.first %}variants-ui__radios--first{% endif %}
+                {% if forloop.last %}variants-ui__radios--last{% endif %}
+                {{ radios_classes }}
+              {% else %}
+                variants-ui__swatches
+                {{ swatches_classes }}
+                {% if forloop.first %}variants-ui__swatches--first{% endif %}
+                {% if forloop.last %}variants-ui__swatches--last{% endif %}
+              {% endunless %}
+            "
+          >
+            <legend
+              class="
+                variants-ui__option-header
+                {{ option_header_classes }}
+              "
+            >
+              <span
+                class="
+                  variants-ui__option-name
+                  {{ option_name_classes }}
+                "
+                data-variant-option-name="{{ 'product.variants.chosen_option_html' | t: option: option.name, value: option.selected_value | escape }}"
+                data-variant-option-choose-name="{{ 'product.variants.choose_option' | t: option: option.name }}"
+              >
+                {% if selected_variant %}
+                  {{ 'product.variants.chosen_option_html' | t: option: option.name, value: option.selected_value }}
+                {% else %}
+                  {{ 'product.variants.choose_option' | t: option: option.name }}
+                {% endif %}
+              </span>
+            </legend>
+          
+            <div
+              class="
+                variants-ui__option-values
+                {{ option_values_classes }}
+              "
+              data-variant-option
+              data-variant-option-index="{{ option_index }}"
+              data-variant-option-chosen-value="{% if selected_variant %}{{ option.selected_value }}{% else %}false{% endif %}"
+            >
+              {% for value in option.values %}
+                <div
+                  class="
+                    variants-ui__option-value
+                    {% if selected_variant and option.selected_value == value %}variants-ui__option-value--selected{% endif %}
+                    {{ option_value_classes }}
+                  "
+                  data-variant-option-value-wrapper
+                >
+                  <label
+                    class="
+                      variants-ui__option-value-label
+                      {{ option_value_label_classes }}
+                    "
+                    for="{{ section.id }}-form-{{ form_id }}-variant-option-{{ option_index }}-{{ forloop.index0 }}"
+                  >
+                    <input
+                      id="{{ section.id }}-form-{{ form_id }}-variant-option-{{ option_index }}-{{ forloop.index0 }}"
+                      class="
+                        variants-ui__option-value-input
+                        {{ option_value_input_classes }}
+                      "
+                      type="radio"
+                      name="{{ option.name | url_encode }}"
+                      value="{{ value | escape }}"
+                      tabindex="0"
+                      aria-label="{{ value | escape }}"
+                      {% if selected_variant and option.selected_value == value %}checked{% endif %}
+                      data-variant-option-value
+                      data-variant-option-value-index="{{ option_index }}"
+                    >
+          
+                    <span
+                      class="
+          
+                        {% unless show_swatches %}
+                          variants-ui__option-value-name
+                          {{ option_value_name_classes }}
+                        {% else %}
+                          variants-ui__option-swatch-wrapper
+                          {{ option_swatch_wrapper_classes }}
+                        {% endunless %}
+                      "
+                      tabindex="-1"
+                      {% if show_swatches %}
+                        data-swatch-tooltip="{{ value | escape }}"
+                      {% endif %}
+                    >
+                      {% unless show_swatches %}
+                        {{ value }}
+                      {% else %}
+                        {% assign use_variant_images = false %}
+                        {% if swatches_option_style == 'variant_image' %}
+                          {% assign use_variant_images = true %}
+                        {% endif %}
+                        {% assign use_aspect_ratio = false %}
+                        {% if swatches_shape == 'square' %}
+                          {% assign use_aspect_ratio = true %}
+                        {% endif %}
+                        {% capture swatch_styles %}
+                          {% assign color_name = value %}
+                          {% assign use_variant_images = use_variant_images %}
+                          {% assign swatch_product = product %}
+                          {% assign swatch_option_key = swatch_option_key %}
+                          {% assign swatch_size = swatches_product_page_size %}
+                          {% assign use_aspect_ratio = use_aspect_ratio %}
+                          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-swatch-styles begin{% endcomment %}
+                          {%- capture _ -%}
+                            {% comment %}
+                              @param color_name {string}
+                                Color name for which to find a suitable background
+                          
+                              @param use_variant_images {boolean} [Optional - required if using variant images]
+                                Use variant images as pattern images instead of the standard manual pattern images.
+                          
+                              @param swatch_product {product} [Optional - required if using variant images]
+                                Product from which to use variant images.
+                          
+                              @param swatch_option_key {string} [Optional - required if using variant images]
+                                option that contains swatch variants, one of `option1`, `option2`, or `option3`.
+                          
+                              @param swatch_size {integer} [Optional - required if using variant images]
+                                Pixel height of swatch.
+                          
+                              @param use_aspect_ratio {boolean} [Optional]
+                                Set swatch aspect ratio based on variant image?
+                          
+                              Outputs a string CSS background properties
+                            {% endcomment %}
+                          
+                            {%- assign use_variant_images = use_variant_images | default: false -%}
+                            {%- assign swatch_product = swatch_product | default: blank -%}
+                            {%- assign swatch_option_key = swatch_option_key | default: blank -%}
+                            {%- assign swatch_size = swatch_size | default: 32 -%}
+                            {%- assign use_aspect_ratio = use_aspect_ratio | default: true, allow_false: true -%}
+                          
+                            {%- assign swatch_bg_color = blank -%}
+                            {%- assign swatch_bg_image = blank -%}
+                            {%- assign swatch_bg_variables = blank -%}
+                            {%- assign swatch_colors = swatches_custom_colors -%}
+                          
+                            {% comment %} First look for a defined custom color {% endcomment %}
+                            {%- assign swatch_colors = swatch_colors | newline_to_br | strip_newlines | split: '<br />' -%}
+                            {%- assign swatch_search_color = color_name | downcase -%}
+                            {%- for swatch_option in swatch_colors -%}
+                              {%- assign swatch_color = swatch_option | split: ':' -%}
+                              {%- assign swatch_color_name = swatch_color[0] | strip | downcase -%}
+                              {%- assign swatch_color_value = swatch_color[1] | strip -%}
+                              {%- if swatch_search_color == swatch_color_name -%}
+                                {% capture swatch_bg_color %}
+                                  background-color: {{ swatch_color_value }};
+                                {% endcapture %}
+                                {%- break -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                          
+                            {% comment %} Otherwise default to the raw color name, which will either be a
+                            valid named HTML color and displayed as such, or will be ignored by the browser. {% endcomment %}
+                            {%- if swatch_bg_color == blank -%}
+                              {% capture swatch_bg_color %}
+                                background-color: {{ color_name | handleize }};
+                              {% endcapture %}
+                            {%- endif -%}
+                          
+                            {%- if use_variant_images and swatch_product != blank and swatch_option_key != blank -%}
+                              {% for variant in swatch_product.variants %}
+                                {% assign option_value_downcased = variant[swatch_option_key] | downcase %}
+                                {% if option_value_downcased == swatch_search_color %}
+                                  {% if variant.image != blank %}
+                                    {%- assign swatch_image_resolution = swatch_size | times: 2 | prepend: 'x' -%}
+                                    {%- assign swatch_file_url = variant.image | img_url: swatch_image_resolution, crop: 'center' -%}
+                                    {%- assign swatch_height = swatch_size | times: 1.0 -%}
+                                    {%- assign swatch_width = swatch_size | times: 1.0 -%}
+                                    {%- if use_aspect_ratio -%}
+                                      {%- assign swatch_width = swatch_size | times: variant.image.aspect_ratio -%}
+                                    {%- endif -%}
+                                    {%- capture swatch_bg_image -%}
+                                      background-image: url('{{- swatch_file_url  -}}');
+                                      width: {{ swatch_width }}px;
+                                      border: 0; {% comment %}Variant image swatches don't get inset borders{% endcomment %}
+                                    {%- endcapture -%}
+                                    {%- assign selected_border_offset = 2 | times: 2 -%}
+                                    {%- capture swatch_bg_variables -%}
+                                      --swatch-inner-transform-x: {{ swatch_width | minus: selected_border_offset | divided_by: swatch_width }};
+                                      --swatch-inner-transform-y: {{ swatch_height | minus: selected_border_offset | divided_by: swatch_height }};
+                                    {%- endcapture -%}
+                                  {% endif %}
+                                  {%- break -%}
+                                {% endif %}
+                              {% endfor %}
+                            {%- else -%}
+                              {% comment %} Then look for a pattern image. {% endcomment %}
+                              {% assign swatch_file_name = color_name | downcase | handleize | append: '.png' %}
+                              {%- if images[swatch_file_name] != blank -%}
+                                {%- capture swatch_image_resolution -%}{{ swatch_size | times: 2 }}x{{ swatch_size | times: 2 }}{%- endcapture -%}
+                                {%- assign swatch_file_url = swatch_file_name | file_img_url: swatch_image_resolution, crop: 'center' -%}
+                                {%- capture swatch_bg_image -%}
+                                  background-image: url('{{- swatch_file_url  -}}');
+                                {%- endcapture -%}
+                              {%- endif -%}
+                            {%- endif -%}
+                          
+                          {%- endcapture -%}
+                          {{ swatch_bg_color }}
+                          {{ swatch_bg_image }}
+                          /* variables */
+                          {{ swatch_bg_variables }}
+                          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-swatch-styles end{% endcomment %}
+          
+                        {% endcapture %}
+                        <div
+                          class="
+                            variants-ui__option-swatch
+                            {{ option_swatch_classes }}
+                          "
+                          style="{{ swatch_styles | split: '/* variables */' | last | remove: '/* variables */' }}"
+                        >
+                          <div
+                            class="
+                              variants-ui__option-swatch-inner
+                              {{ option_swatch_inner_classes }}
+                            "
+                            style="{{ swatch_styles | split: '/* variables */' | first }}"
+                          >
+                          </div>
+                        </div>
+                      {% endunless %}
+                    </span>
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </fieldset>
+          {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-radios end{% endcomment %}
+    
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui-options end{% endcomment %}
+  
+  {% endif %}
+  {% comment %}Inject @pixelunion/shopify-variants-ui/variants-ui end{% endcomment %}
+
+
+  <div class="product-form--atc">
+    <div class="product-form--atc-qty form-fields--qty" data-quantity-wrapper>
+      <div class="form-field form-field--qty-select">
+        <div class="form-field-select-wrapper">
+          <select
+            id="product-quantity-select"
+            class="form-field-input form-field-select"
+            aria-label="{{ 'general.general.quantity' | t }}"
+            data-quantity-select
+          >
+            {% for i in (1..9) %}
+              <option {% if i == 1 %}selected {% endif %}value="{{ i }}">
+                {{ i }}
+              </option>
+            {% endfor %}
+            <option value="10+">
+              10+
+            </option>
+          </select>
+          <label
+            for="product-quantity-select"
+            class="form-field-title"
+          >
+            {{ 'general.general.quantity' | t }}
+          </label>
+          {% render 'icon-chevron-down-small' %}
+        </div>
+      </div>
+      <div class="form-field form-field--qty-input hidden">
+        <input
+          id="product-quantity-input"
+          class="form-field-input form-field-number form-field-filled"
+          value="1"
+          name="quantity"
+          type="text"
+          pattern="\d*"
+          aria-label="{{ 'general.general.quantity' | t }}"
+          data-quantity-input
+        >
+        <label
+          for="product-quantity-input"
+          class="form-field-title"
+        >
+          {{ 'general.general.quantity' | t }}
+        </label>
+      </div>
+    </div>
+
+    <button
+      class="product-form--atc-button {% if selected_variant and selected_variant.available == false %}disabled{% endif %}"
+      type="submit"
+      {% if selected_variant and selected_variant.available == false %}disabled{% endif %}
+      data-product-atc
+    >
+      <span class="atc-button--text">
+        {% unless selected_variant and selected_variant.available == false %}
+          {{ 'product.buttons.add_to_cart' | t }}
+        {% else %}
+          {{ 'product.buttons.sold_out' | t }}
+        {% endunless %}
+      </span>
+      <span class="atc-button--icon">
+        {%- render 'icon-spinner' -%}
+      </span>
+    </button>
+  </div>
+
+  <div data-payment-terms-reference style="display: none;">
+    {{ form | payment_terms }}
+  </div>
+
+  <div class="surface-pick-up" data-surface-pick-up></div>
+{% endform %}
+</div>
+
+{% assign breakpoints = '719' %}
+
+<style>
+  .sticky-mobile-cart {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: -100%;
+    transition: .3s;
+    background: #FFFFFF;
+    z-index: 9999;
+    border-top: 1px solid #d8d8d8;
+  }
+  .sticky-mobile-cart * {
+  	margin: 0;	
+  }
+  .sticky-mobile-cart .product-form--atc {
+  	display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    padding: 25px 10px;
+  }
+  .sticky-mobile-cart .form-field-select[data-variant-option-chosen-value] {
+    color: rgb(var(--color-input-text-base));
+  }
+  @media (max-width: {{ breakpoints }}px) {
+    .sticky-mobile-cart.active_cart {
+      	bottom: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    if (window.matchMedia("(max-width: {{ breakpoints }}px)").matches) {                        
+      let main = document.querySelector('#site-main');
+      let mobile_cart = document.querySelector('.sticky-mobile-cart');
+      let cart_in_page = document.querySelectorAll('[data-product-form-area]')[1];
+      let footer = document.querySelector('#shopify-section-static-footer');
+  
+      /*let add_cart = setInterval(()=> {
+        if (!main.contains(mobile_cart)) {                      
+            main.insertAdjacentElement('beforeend', mobile_cart);
+            mobile_cart.classList.add('active_cart');        	
+        }
+      }, 1000);
+      
+      if (main.contains(mobile_cart)) {                      
+     	clearInterval(add_cart);
+      }
+      
+      */
+  		
+  	  main.insertAdjacentElement('beforeend', mobile_cart);
+  
+      function cart_detect() {
+        /*if (window.pageYOffset > cart_in_page.offsetTop){
+         mobile_cart.classList.add('active_cart') 
+        } else if (window.pageYOffset < cart_in_page.offsetTop || mobile_cart.offsetTop > footer.offsetTop) {
+          mobile_cart.classList.remove('active_cart')
+        }*/
+        
+        if ((window.scrollY > cart_in_page.offsetTop) && (mobile_cart.getBoundingClientRect().top <= footer.getBoundingClientRect().top)) {
+            mobile_cart.classList.add('active_cart');
+        } else {
+        	mobile_cart.classList.remove('active_cart');
+        }
+      }
+      
+      if (window.addEventListener) {
+          addEventListener('load', cart_detect, {passive: true});
+          addEventListener('scroll', cart_detect, {passive: true});
+          addEventListener('touchstart', cart_detect, {passive: true});
+      } else if (window.attachEvent)  {
+          attachEvent('onDOMContentLoaded', cart_detect);
+          attachEvent('onload', cart_detect);
+          attachEvent('onscroll', cart_detect);
+          attachEvent('onresize', cart_detect);
+      }
+  
+ 		mobile_cart.querySelector('.variants-ui__input-select').addEventListener('change', (event) => {
+            document.querySelectorAll('.variants-ui__input-select')[0].options[event.target.selectedIndex].selected = true;
+            document.querySelectorAll('.variants-ui__input-select')[0].dispatchEvent(new Event('change'));
+        });
+	  
+
+      /*function cart_detect() {
+          let pos = cart_in_page.getBoundingClientRect();       
+          let view = pos.top >= 0 && pos.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+          view ? mobile_cart.classList.remove('active_cart') : mobile_cart.classList.add('active_cart');
+      }
+
+      if (window.addEventListener) {
+          addEventListener('load', cart_detect, {passive: true});
+          addEventListener('scroll', cart_detect, {passive: true});
+          addEventListener('touchstart', cart_detect, {passive: true});
+      } else if (window.attachEvent)  {
+          attachEvent('onDOMContentLoaded', cart_detect);
+          attachEvent('onload', cart_detect);
+          attachEvent('onscroll', cart_detect);
+          attachEvent('onresize', cart_detect);
+      }*/
+  
+      /*const observer = new window.IntersectionObserver(([curr]) => {
+        if (curr.isIntersecting) {
+              mobile_cart.classList.remove('active_cart');
+              return
+        }
+        mobile_cart.classList.add('active_cart');
+      }, { root: null, threshold: 0.5 });
+
+      observer.observe(cart_in_page);*/
+  
+  	/*function cart_detect(el) {
+        let rect = el.getBoundingClientRect(),
+            vWidth = window.innerWidth || doc.documentElement.clientWidth,
+            vHeight = window.innerHeight || doc.documentElement.clientHeight,
+            efp = function (x, y) {
+                return document.elementFromPoint(x, y);
+            };
+        if (rect.right < 0 || rect.bottom < 0 || rect.left > vWidth || rect.top > vHeight) return false;
+        return el.contains(efp(rect.left, rect.top)) || el.contains(efp(rect.right, rect.top)) || el.contains(efp(rect.right, rect.bottom)) || el.contains(efp(rect.left, rect.bottom));
+    }
+
+    function cart_behavior() {
+      	cart_detect(cart_in_page) ? mobile_cart.classList.remove('active_cart') : mobile_cart.classList.add('active_cart');
+    }
+
+    if (window.addEventListener) {
+        addEventListener("load", cart_behavior, { passive: true });
+        addEventListener("scroll", cart_behavior, { passive: true });
+      	addEventListener("resize", cart_behavior, { passive: true });
+        addEventListener("touchstart", cart_behavior, { passive: true });
+    } else if (window.attachEvent) {
+        attachEvent("onDOMContentLoaded", cart_behavior);
+        attachEvent("onload", cart_behavior);
+        attachEvent("onscroll", cart_behavior);
+        attachEvent("onresize", cart_behavior);
+    }*/
+
+
+    }
+  
+  });
+</script>
+
