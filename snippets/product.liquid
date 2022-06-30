@@ -93,7 +93,7 @@
       {% assign meta_data_discount_amount = 0.70 %}
     {% endif %}
     {% if product.tags contains 'OGMultis' %}
-      {% assign meta_data_discount_amount = 0.70 %}
+      {% assign meta_data_discount_amount = 0.00 %}
     {% endif %}
     {% comment %} Discount for 90 Day Supply on Bye Bye Bloat {% endcomment %}
     {% if product.tags contains 'OGJumbo' and selected_variant.options contains '90 Day Supply' %}
@@ -198,6 +198,16 @@
                 </div>
               {% endif %}
             {% when 'price' %}
+              <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                  setTimeout(function(){
+                    document.getElementsByClassName('product-pricing')[0].parentElement.insertAdjacentHTML('beforebegin',
+      '<span class="new-paragraph"></span>');
+                    document.getElementsByClassName('new-paragraph')[0].innerText = document.querySelector('.product-description p').innerText; 
+                  },2000);
+                });
+
+              </script>
               {% if settings.product_ratings_reviews %}
                 <div class="product-ratings">
                   <span class="shopify-product-reviews-badge" data-id="{{ product.id }}">
@@ -251,7 +261,15 @@
 
                 <form data-payment-terms-target style="display: none;"></form>
               </div>
-
+          
+			  <!-- Placement v2 -->
+              <klarna-placement
+                data-key="credit-promotion-badge"
+                data-locale="en-US"
+                data-purchase-amount="{{ product.price }}"
+              ></klarna-placement>
+              <!-- end Placement -->
+          
             {% when 'sku' %}
               {% unless onboarding %}
                 <div
@@ -410,6 +428,7 @@
   </div>
 {% endif %}
 
+{% render 'sticky-mobile-cart' %}
 
 <script type="text/javascript">
   

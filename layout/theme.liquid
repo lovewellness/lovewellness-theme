@@ -50,7 +50,7 @@
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
     <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
-     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.43&shop=dirt-project.myshopify.com"></script>
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.48&shop=dirt-project.myshopify.com"></script>
 <!-- End BlackCrow Script Tag -->
     {% endcapture %}
     {% render 'renderbetter-code', defer: 'analytics', code: code %}
@@ -134,7 +134,7 @@
             {% assign meta_data_discount_amount = 0.70 %}
           {% endif %}
           {% if product.tags contains 'OGMultis' %}
-            {% assign meta_data_discount_amount = 0.70 %}
+            {% assign meta_data_discount_amount = 0.0 %}
           {% endif %}
         {% endif %}
 
@@ -268,13 +268,17 @@
     {%- render 'ordergroove_static_asset' -%}
     <!--begin-boost-pfs-filter-css-->
     {% render 'boost-pfs-style' %}
-    <!--end-boost-pfs-filter-css-->
-    
+    <!--end-boost-pfs-filter-css-->    
     <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
   {% include 'store-credit-launcher' %}
 </head>
 
   <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
+    <script
+      async
+      src="https://na-library.klarnaservices.com/lib.js"
+      data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
+    ></script>
     
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come right after the start of the body tag{% endcomment %}
@@ -698,6 +702,8 @@
         )()
       </script>
     {% endunless %}
+    
+
 
     <script
       src="{{ 'theme.min.js' | asset_url }}"
@@ -828,8 +834,16 @@
     </script>
   <!-- END PebblePost PageViews Tracking Body -->
 
-
     
   {% render 'nosto-tagging' %}
+    
+  <script>
+    $(document).ajaxSuccess(function(event, request, settings) {
+      if (settings.url === '/cart/add.js' && request.status === 200) {
+          Nosto.reloadCart();
+      }    
+    });
+  </script>
+    
 </body>
 </html>

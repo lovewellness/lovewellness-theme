@@ -205,7 +205,7 @@
     {% render 'site-header-actions' %}
 
     <div class="site-header-cart">
-      <a class="site-header-cart--button" href="{{ routes.cart_url }}">
+      <a class="site-header-cart--button {% if settings.enable_cart_modal %}modal-cart{% endif %}" href="{% if settings.enable_cart_modal %}#{% else %}{{ routes.cart_url }}{% endif %}">
         <span
           class="site-header-cart--count {% if cart.item_count > 0 %}visible{% endif %}"
           data-header-cart-count="{% if cart.item_count > 0 %}{{ cart.item_count }}{% endif %}">
@@ -258,6 +258,105 @@
     {% endif %}
   </nav>
 </div>
+
+{% if settings.enable_cart_modal %}
+  <style>
+    .cart-modal-container {
+      position: absolute;
+      top: 100%;
+      z-index: 600;
+      display: none;
+      width: 100%;
+      background-color: rgb(var(--color-background-base));
+      outline: none;
+      opacity: 0;
+      transform: translateY(0);
+      box-shadow: 0 2px 5px rgba(var(--color-border-base),.25);
+      padding: 1.25rem;
+    }
+    .cart-modal-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      height: calc(300px + 5.25rem);
+      overflow-y: auto;
+    }
+    .cart-modal-product {
+
+    }
+    .cart-modal-subtotal, .cart-modal-buttons {
+      margin-top: 25px;
+      display: flex;
+      justify-content: center;
+    }
+    .cart-modal-container-close {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      color: rgb(var(--color-text-base));
+      font-weight: 700;
+      font-style: normal;
+      padding: 0;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+    }
+  </style>
+
+  <section class="cart-modal-container">
+    <button class="cart-modal-container-close">{%- render 'icon-menu-close' -%}</button>
+    <h2 class="atc-banner--product-title">Cart</h2>	
+    <ul class="cart-modal-list"></ul>
+    <div class="cart-modal-subtotal"></div>
+    <div class="cart-modal-buttons"><a href="{{ routes.cart_url }}" class="button-secondary atc-button--viewcart"></a><button class="button-primary atc-button--checkout" type="submit" name="checkout" aria-label="{{ 'cart.general.checkout' | t }}">{% if settings.enable_checkout_lock_icon %}{% render 'icon-checkout-lock' %}{% else %}{% render 'icon-library', id: 'icon-cart' %}{% endif %}{{ 'cart.general.checkout' | t }}</button></div>
+  </section>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('.site-header-cart--button.modal-cart').addEventListener('click', (event) => {
+          event.preventDefault();
+
+          fetch("/cart.js").then((response) => response.json()).then((data) => {
+
+              document.querySelector('.cart-modal-list').innerHTML = '';
+
+              Object.keys(data.items).map((current_product) => {
+                let product = 
+                  `<li class="cart-modal-product">
+                      <div class="atc--product">
+                          <div class="atc--product-image">
+                              <img src="${data.items[current_product].image}" alt="${data.items[current_product].product_title}">
+                          </div>
+                          <div class="atc--product-details">
+                              <h2 class="atc--product-details--title">${data.items[current_product].product_title}</h2>
+                              <span class="atc--product-details--price">${data.items[current_product].quantity} x ${Shopify.formatMoney(data.items[current_product].price)}</span>
+                          </div>
+                      </div>
+                   </li>`;
+
+                document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', product);
+
+              });
+
+              document.querySelector('.cart-modal-subtotal').innerHTML = 
+                `<span class="atc-banner--cart-subtotal">
+                    Cart subtotal ${Shopify.formatMoney(data.total_price)}
+                </span>`;	
+
+              document.querySelector('.cart-modal-buttons a').textContent = `VIEW CART (${data.item_count})`;
+
+              document.querySelector('.cart-modal-container').style.display = 'block';
+              document.querySelector('.cart-modal-container').style.opacity = '1';         
+          });   
+      });
+    
+    document.querySelector('.cart-modal-container-close').addEventListener('click', () => {
+      document.querySelector('.cart-modal-container').style.display = '';
+      document.querySelector('.cart-modal-container').style.opacity = '';           		
+    });
+  });
+  </script>
+{% endif %}
 
 {%
   render 'site-mobile-nav',
