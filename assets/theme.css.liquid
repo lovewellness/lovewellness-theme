@@ -20153,4 +20153,81 @@ body:not(.user-is-tabbing) .rte .tabs .grouped-content-trigger {
   #shopify-section-template--14594744025203__1645826610bdf9533f .slideshow {
 	margin-top: 0;
 }
+  
+  
+/* New changes (product) */  
+  
+.new-paragraph {
+	display: none;
+}
+  
+@media (max-width: 480px){
+  .product-gallery .product-gallery--loaded-image {
+	max-width: 70vw;
+	max-height: 70vw;
+  }
+  
+  .product-gallery--viewer {
+      max-height: 70vw;
+  }
+
+  .product-gallery--media-thumbnail {
+      height: 3rem;
+  }
+  
+  .new-paragraph {
+	display: block;
+  }
+  
+  .product-description.rte p:first-of-type {
+	display: none;
+  }
+  
+  .product-ratings + .new-paragraph {
+	bottom: 1em;
+	position: relative;
+  }
+  
+  /*Thumbnails*/
+  .product-gallery {
+	display: flex;
+	flex-direction: row-reverse;
+  }
+  
+  .gallery-navigation--scroller {
+    display: flex;
+    flex-direction: column;
+    max-height: 70vw;
+    overflow-x: hidden;
+    overflow-y: scroll;
+  }
+  
+  .gallery-navigation--scroll-button.scroll-right,
+  .gallery-navigation--scroll-button.scroll-left {
+    display: none;
+  }
+  
+  .product-gallery--navigation {
+    max-width: 4rem;
+  }
+
+  .product-gallery--media-thumbnail {
+      height: 4rem;
+  }
+
+}
+  
+/* nosto limit height */
+  
+@media (max-width: 768px){  
+  .site-header-sticky .atc-banner--container,
+  .nosto_overlay section.atc-banner--container {
+      height: 450px;
+      overflow-y: auto;
+      border-bottom: 1px solid;
+  }
+}
+  
 /*# sourceMappingURL=theme.css.liquid.map */
+
+  

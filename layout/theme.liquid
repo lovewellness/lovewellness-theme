@@ -49,7 +49,7 @@
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
     <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
-     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.46&shop=dirt-project.myshopify.com"></script>
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.48&shop=dirt-project.myshopify.com"></script>
 <!-- End BlackCrow Script Tag -->
     {% endcapture %}
     {% render 'renderbetter-code', defer: 'analytics', code: code %}
@@ -133,7 +133,7 @@
             {% assign meta_data_discount_amount = 0.70 %}
           {% endif %}
           {% if product.tags contains 'OGMultis' %}
-            {% assign meta_data_discount_amount = 0.70 %}
+            {% assign meta_data_discount_amount = 0.0 %}
           {% endif %}
         {% endif %}
 
@@ -280,7 +280,11 @@
 </head>
 
   <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
-
+    <script
+      async
+      src="https://na-library.klarnaservices.com/lib.js"
+      data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
+    ></script>
     
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come right after the start of the body tag{% endcomment %}
@@ -710,16 +714,6 @@
       </script>
     {% endunless %}
     
-    {% comment %}begin rb_defer{% endcomment %}
-    {% capture code %}
-    <script
-        async
-        src="https://na-library.klarnaservices.com/lib.js"
-        data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
-      ></script>
-    {% endcapture %}
-    {% render 'renderbetter-code', defer: 'enhancement', code: code %}
-    {% comment %}end rb_defer{% endcomment %}
 
     <script
       src="{{ 'theme.min.js' | asset_url }}"
@@ -824,33 +818,6 @@
     {% render 'renderbetter-code', place: 'body-bottom' %}
     {% comment %}end rb_code{% endcomment %}
     
-
-    {% comment %}begin rb_defer{% endcomment %}
-    {% capture code %}
-        <!-- START PebblePost PageViews Tracking Body -->
-        <script>
-          window._pp = window._pp || [];
-          _pp.brid = "2697";    
-          {% if customer.id %}
-          _pp.brcid = "{{ customer.id }}"; 
-          {% endif %}
-          {% if customer.email %} // Optional
-          _pp.email = "{{ customer.email }}"; // Optional
-          {% endif %} // Optional
-          (function() {
-          var ppjs = document.createElement('script');
-          ppjs.type = 'text/javascript';
-          ppjs.async = true;
-          ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') +
-          '//cdn.pbbl.co/r/' + _pp.brid + '.js';
-          var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(ppjs, s);
-          })();
-        </script>
-      <!-- END PebblePost PageViews Tracking Body -->
-    {% endcapture %}
-    {% render 'renderbetter-code', defer: 'analytics', code: code %}
-    {% comment %}end rb_defer{% endcomment %}
 
     
   {% render 'nosto-tagging' %}
