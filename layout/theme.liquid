@@ -2,34 +2,6 @@
 <html class="no-js no-touch" lang="{{ request.locale.iso_code }}">
   <head>
 
-    {% assign boost_pfs_is_init = false %}    
-{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
-    {%- unless template contains 'boost-pfs-original' -%}
-    {% assign boost_pfs_is_init = true %}
-	  {%- if request.page_type == 'collection' -%}
-    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/filter" />
-    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/filter" />
-    {%- else -%}
-    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/search" />
-    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/search" />
-    {%- endif -%}
-    <link rel="preload" href="{{ 'boost-pfs-vendor.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-core.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-filter.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">
-    <link rel="preload" as="style" href="{{ 'boost-pfs-general.css' | asset_url }}">    
-    {%- endunless -%}
-{%- endif -%}    
-
-{%- unless boost_pfs_is_init -%}
-    <link rel="preload" href="{{ 'boost-pfs-core-instant-search.js' | asset_url }}" as="script">    
-    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">    
-    <link rel="preload" as="style" href="{{ 'boost-pfs-instant-search.css' | asset_url }}">
-{%- endunless -%}
-    <link rel="preload" as="style" href="{{ 'boost-pfs-custom.css' | asset_url }}">
-    
-
-
     {% render 'preload-hints' %}
 
     {% if template.suffix contains 'referrals' %}
