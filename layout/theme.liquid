@@ -530,7 +530,9 @@
       </div>
     </div>
 
-    {{ 'splide.min.js' | asset_url | script_tag }}
+    
+
+    <script defer src="{{ 'splide.min.js' | asset_url  }}" ></script>
 
 
     {% comment %}Inject product-gallery-zoom end{% endcomment %}
