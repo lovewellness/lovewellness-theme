@@ -11,7 +11,8 @@
 
     
 {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
-{{ 'splide.min.js' | asset_url | script_tag }}
+
+<script defer src="{{ 'splide.min.js' | asset_url }}" ></script>
 
 <section class="promo-grid--container section-{{ section.id }}">
   {% if section.settings.title != blank %}
