@@ -71,6 +71,14 @@
           {% endcase %}
         {% endif %}
 
+        {% liquid 
+          if forloop.first
+           assign Lazy = false
+          else
+           assign lazy = true
+          endif
+        %}
+
         {% comment %} Adjust the image dimensions to be within the maximum zoom size {% endcomment %}
         {% if zoom_height > max_zoom or zoom_width > max_zoom %}
           {% assign crop_aspect_ratio = zoom_width | times: 1000 | divided_by: zoom_height %}
@@ -113,7 +121,7 @@
             img: media,
             class: 'product-gallery--loaded-image'
             size: 'x700',
-            lazy: true,
+            lazy: lazy,
             canvas: true
           %}
         </div>
