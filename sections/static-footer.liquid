@@ -48,6 +48,10 @@
 
         {%- if section.settings.payment_icons or currency_selector or locale_selector -%}
           <div class="site-footer-right">
+            <div class="accessibility-new">
+              	Accessibility Menu
+            </div>
+            
             {% comment %}Inject @pixelunion/shopify-cross-border/cross-border begin{% endcomment %}
             {% form 'localization' %}
               {% if locale_selector and form.available_locales.size > 1 %}

@@ -89,7 +89,7 @@
   {% if has_link %}
     <a
       class="{{ wrapper_classes | replace: '  ', ' ' | strip_newlines }}"
-      href="{{ block.settings.block_link }}"
+      href="{{ block.settings.block_link }}{% if block.settings.block_link != blank %}{% if block.settings.anchor_id != blank %}{{ block.settings.anchor_id }}{% endif %}{% endif %}"
       data-promo-block-content
     >
   {% else %}

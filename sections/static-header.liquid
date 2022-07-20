@@ -259,6 +259,9 @@
   </nav>
 </div>
 
+
+<!-- modal cart ajax (maxburst) -->
+
 {% if settings.enable_cart_modal %}
   <style>
     .cart-modal-container {
@@ -301,6 +304,12 @@
       background: transparent;
       border: 0;
     }
+    .modal-productitem--title {
+      color: #121d1f;
+      display: block;
+      text-align: left;
+      text-decoration: none;
+    }
   </style>
 
   <section class="cart-modal-container">
@@ -308,19 +317,88 @@
     <h2 class="atc-banner--product-title">Cart</h2>	
     <ul class="cart-modal-list"></ul>
     <div class="cart-modal-subtotal"></div>
-    <div class="cart-modal-buttons"><a href="{{ routes.cart_url }}" class="button-secondary atc-button--viewcart"></a><button class="button-primary atc-button--checkout" type="submit" name="checkout" aria-label="{{ 'cart.general.checkout' | t }}">{% if settings.enable_checkout_lock_icon %}{% render 'icon-checkout-lock' %}{% else %}{% render 'icon-library', id: 'icon-cart' %}{% endif %}{{ 'cart.general.checkout' | t }}</button></div>
+    <div class="cart-modal-buttons"><a href="{{ routes.cart_url }}" class="button-secondary atc-button--viewcart"></a><a href="/checkout" class="button-primary atc-button--checkout" type="submit" name="checkout" aria-label="{{ 'cart.general.checkout' | t }}">{% if settings.enable_checkout_lock_icon %}{% render 'icon-checkout-lock' %}{% else %}{% render 'icon-library', id: 'icon-cart' %}{% endif %}{{ 'cart.general.checkout' | t }}</a></div>
   </section>
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
       document.querySelector('.site-header-cart--button.modal-cart').addEventListener('click', (event) => {
           event.preventDefault();
+    
+    	  if (!Shopify.formatMoney) {
+              {% assign amount_format = '{{amount}}' %}
+              Shopify.money_format = "${{amount_format}}";
+              Shopify.formatMoney = function(cents, format) {
+                if (typeof cents == 'string') { cents = cents.replace('.',''); }
+                var value = '';
+                var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+                var formatString = (format || this.money_format);
+
+                function defaultOption(opt, def) {
+                   return (typeof opt == 'undefined' ? def : opt);
+                }
+
+                function formatWithDelimiters(number, precision, thousands, decimal) {
+                  precision = defaultOption(precision, 2);
+                  thousands = defaultOption(thousands, ',');
+                  decimal   = defaultOption(decimal, '.');
+
+                  if (isNaN(number) || number == null) { return 0; }
+
+                  number = (number/100.0).toFixed(precision);
+
+                  var parts   = number.split('.'),
+                      dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
+                      cents   = parts[1] ? (decimal + parts[1]) : '';
+
+                  return dollars + cents;
+                }
+
+                switch(formatString.match(placeholderRegex)[1]) {
+                  case 'amount':
+                    value = formatWithDelimiters(cents, 2);
+                    break;
+                  case 'amount_no_decimals':
+                    value = formatWithDelimiters(cents, 0);
+                    break;
+                  case 'amount_with_comma_separator':
+                    value = formatWithDelimiters(cents, 2, '.', ',');
+                    break;
+                  case 'amount_no_decimals_with_comma_separator':
+                    value = formatWithDelimiters(cents, 0, '.', ',');
+                    break;
+                }
+
+                return formatString.replace(placeholderRegex, value);
+              }
+          }
 
           fetch("/cart.js").then((response) => response.json()).then((data) => {
-
+          
               document.querySelector('.cart-modal-list').innerHTML = '';
 
-              Object.keys(data.items).map((current_product) => {
+                Object.keys(data.items).map((current_product) => {
+
+                function check_price() {
+                  let price = data.items[current_product].price;
+                    if (price > 0) {
+                      return `${data.items[current_product].quantity} x ${Shopify.formatMoney(price)}`;
+                    } else {
+                      return 'FREE';
+                    }
+                }
+
+                function get_discounted_price() {
+                  let price = data.items[current_product].price;
+                  let discounted_price = data.items[current_product].discounted_price;
+                  if (discounted_price < price) {
+                        discounted_price = price - discounted_price;
+                        return `<span class="discount-list-item">Subscription Discount (-${Shopify.formatMoney(discounted_price)})</span>`;
+                  } else {
+                        return '';
+                  }
+                }
+                  
                 let product = 
                   `<li class="cart-modal-product">
                       <div class="atc--product">
@@ -328,8 +406,9 @@
                               <img src="${data.items[current_product].image}" alt="${data.items[current_product].product_title}">
                           </div>
                           <div class="atc--product-details">
-                              <h2 class="atc--product-details--title">${data.items[current_product].product_title}</h2>
-                              <span class="atc--product-details--price">${data.items[current_product].quantity} x ${Shopify.formatMoney(data.items[current_product].price)}</span>
+                              <h2 class="atc--product-details--title"><a class="modal-productitem--title" href="${data.items[current_product].url}">${data.items[current_product].product_title}</a></h2>
+                              <span class="atc--product-details--price">${check_price()}</span>
+								${get_discounted_price()}	
                           </div>
                       </div>
                    </li>`;
@@ -357,6 +436,8 @@
   });
   </script>
 {% endif %}
+
+<!-- end -->
 
 {%
   render 'site-mobile-nav',

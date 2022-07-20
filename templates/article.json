@@ -1,1 +1,32 @@
-{"sections":{"main":{"type":"static-article","settings":{"featured_image_width":"full-width","show_date":false,"show_author":false,"use_share_buttons":true}},"1642604591f71ddfad":{"type":"dynamic-featured-collection","settings":{"title":"Shop Our Best-Selling Wellness Solutions","highlight":"","highlight_color":"","xs_margin_top":50,"xs_margin_bottom":20,"layout":"slideshow","collection":"2022-new-year-resolutions","product_count":10,"cta_label":"Shop All","cta_button_style":"primary"}}},"order":["main","1642604591f71ddfad"]}
+{
+  "sections": {
+    "main": {
+      "type": "static-article",
+      "settings": {
+        "featured_image_width": "full-width",
+        "show_date": true,
+        "show_author": true,
+        "use_share_buttons": true
+      }
+    },
+    "1642604591f71ddfad": {
+      "type": "dynamic-featured-collection",
+      "settings": {
+        "title": "Shop Our Best-Selling Wellness Solutions",
+        "highlight": "",
+        "highlight_color": "",
+        "xs_margin_top": 50,
+        "xs_margin_bottom": 20,
+        "layout": "slideshow",
+        "collection": "2022-new-year-resolutions",
+        "product_count": 10,
+        "cta_label": "Shop All",
+        "cta_button_style": "primary"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "1642604591f71ddfad"
+  ]
+}

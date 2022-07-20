@@ -184,6 +184,20 @@
                   </h1>
                 {% endif %}
               {% endif %}
+          
+          
+        {% if product.id == 6841624920179 or product.id == 6841625935987 or product.id == 6841625280627 or product.id == 6841625575539 %}
+      
+          <div class="product-raiting">
+            <div class="rating_from_hybrid">
+              <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+            </div>
+            <a href="javascript:void(0)" class="count_from_hybrid"></a>
+          </div>
+      
+      	{% endif %}
+          
+          
             {% when 'vendor' %}
               {% if product.vendor != blank or onboarding %}
                 <div class="product-vendor">
@@ -577,9 +591,11 @@
     });
   };
 
-//   document.addEventListener("DOMContentLoaded", fetchSubscriptionData());
+  {% if product.id == 1301627830387 %}
+    document.addEventListener("DOMContentLoaded", fetchSubscriptionData());
+    document.addEventListener("DOMContentLoaded", checkForOffers);
+  {% endif %}
   
-  //document.addEventListener("DOMContentLoaded", checkForOffers);
   // On variant change, update the OG widget to select opt in or opt out based on theme settings
   variantInput.addEventListener('change', checkForOffers);
 
@@ -599,6 +615,39 @@
     }
 
   }, false);
+  
+  // Sergey K (Maxburst)  
+  {% if product.id == 6841624920179 or product.id == 6841625935987 or product.id == 6841625280627 or product.id == 6841625575539 %}
+  
+    let merge_count = 0;
+    let id_prod_array = {% if product.id == 6841624920179 %}['3866743930995', '1301634908275']{% endif %}
+    					{% if product.id == 6841625935987 %}['6727361200243', '1301638938739']{% endif %}
+    					{% if product.id == 6841625280627 %}['1404205465715', '1301810937971']{% endif %}
+    					{% if product.id == 6841625575539 %}['1301637070963', '1301634908275']{% endif %};
+  	let options = {
+        method: 'GET',
+        headers: {Accept: 'application/json', 'Content-Type': 'application/json'}
+    };
+
+    function get_yotpo() {
+ 
+      for (const id_prod of id_prod_array) {
+         fetch(`https://api-cdn.yotpo.com/v1/widget/1kwQJ5kAqxUWGLOo6IGdg5ZQlfcTy9k5YmJC1VhH/products/${id_prod}/reviews.json`, options)
+          .then(response => response.json())
+          .then(get_count);
+      }
+
+      function get_count(data) {
+           console.log(data.response.bottomline.total_review);	
+           merge_count = merge_count + data.response.bottomline.total_review;
+           document.querySelector('.count_from_hybrid').textContent = `${merge_count} Reviews`;          
+      }
+     
+    }
+
+    get_yotpo();
+  
+  {% endif %}
 
 </script>
 {% render 'nosto-element', id:'productpage-nosto-1' %}

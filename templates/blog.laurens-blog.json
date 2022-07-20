@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "165826417198e7e15a": {
+      "type": "dynamic-promo-grid-CUSTOM",
+      "settings": {
+        "title": "",
+        "section_height": "small",
+        "section_columns": 4,
+        "text_alignment": "top-left"
+      }
+    },
+    "main": {
+      "type": "static-blog",
+      "settings": {
+        "show_rss_link": false,
+        "show_date": false,
+        "show_author": true,
+        "show_excerpt": true,
+        "featured_post": "work-life-balance-blog\/welcome-to-my-work-life-balance-blog",
+        "posts_per_page_range": 9
+      }
+    },
+    "1642625771566601c5": {
+      "type": "dynamic-image-with-text",
+      "settings": {
+        "section_heading": "",
+        "image": "shopify:\/\/shop_images\/love-wellness-13104_543c9174-6ec9-4e88-a7a7-bd848b19cabc.png",
+        "crop": "bottom",
+        "desktop_height": "400px",
+        "mobile_height": "natural",
+        "desktop_image_alignment": "left",
+        "mobile_image_alignment": "top",
+        "heading": "It's Time to Try Something New",
+        "subheading": "<p>Answer a few questions and we'll match you up with your next (super healthy) obsession.<\/p>",
+        "highlight": "",
+        "highlight_color": "",
+        "text_alignment": "left",
+        "button_label": "TAKE THE QUIZ",
+        "button_link": "shopify:\/\/pages\/quiz"
+      }
+    }
+  },
+  "order": [
+    "165826417198e7e15a",
+    "main",
+    "1642625771566601c5"
+  ]
+}
