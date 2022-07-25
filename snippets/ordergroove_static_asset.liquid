@@ -90,7 +90,8 @@ Last updated at: 2022-02-08T02:35:50.109Z / Version: 2.1.5
   	{% if product.id != 1301627830387 and product.id != 6841624920179 %}
   		document.querySelector('og-optout-button').dispatchEvent(new Event('click'));
     {% else %}
-    	document.querySelector('og-optin-button').dispatchEvent(new Event('click'));
+    	//document.querySelector('og-optin-button').dispatchEvent(new Event('click'));
+       document.querySelector('og-optin-button').click();
     {% endif %}
    	{% if product.id != 3864594120819 and product.id != 4586497835123 and product.id != 2060721586291 and product.id != 1301634908275 %}
       document.querySelector('.og-price-subscription').textContent = " - {{ product.price | times: 0.7 | money }}";
