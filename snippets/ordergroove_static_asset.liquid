@@ -87,7 +87,11 @@ Last updated at: 2022-02-08T02:35:50.109Z / Version: 2.1.5
 <script type="text/javascript" src="https://static.ordergroove.com/d941af3a17b011ebad4abc764e10b970/main.js"></script>
 <script> 
  document.addEventListener("DOMContentLoaded", function() {
-  	document.querySelectorAll('og-optout-button')[0].dispatchEvent(new Event('click'));
+    {% if product.id != 1301627830387 and product.id != 6841624920179 %}
+      document.querySelector('og-optout-button').dispatchEvent(new Event('click'));
+    {% else %}
+      document.querySelector('og-optin-button').dispatchEvent(new Event('click'));
+    {% endif %}
    	{% if product.id != 3864594120819 and product.id != 4586497835123 and product.id != 2060721586291 and product.id != 1301634908275 %}
       document.querySelector('.og-price-subscription').textContent = " - {{ product.price | times: 0.7 | money }}";
       document.querySelector('.og-price-purchase').textContent = " - {{ product.price | money }}";
