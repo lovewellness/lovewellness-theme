@@ -577,6 +577,11 @@
     });
   };
 
+  {% if product.id == 1301627830387 and product.id == 6841624920179 %}
+    document.addEventListener("DOMContentLoaded", fetchSubscriptionData());
+    document.addEventListener("DOMContentLoaded", checkForOffers);
+  {% endif %}
+
 //   document.addEventListener("DOMContentLoaded", fetchSubscriptionData());
   
   //document.addEventListener("DOMContentLoaded", checkForOffers);
