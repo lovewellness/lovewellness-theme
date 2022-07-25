@@ -360,8 +360,19 @@
       {% if product.metafields.my_fields["sub_title"] != blank %}
         <p class="productitem--subtitle">{{ product.metafields.my_fields["sub_title"] }}</p>
       {% endif %}
+      
+<!--       {% if product.id == 6841624920179 or product.id == 6841625935987 or product.id == 6841625280627 or product.id == 6841625575539 %}
+      
+          <div class="product-raiting">
+            <div class="rating_from_hybrid preview_product">
+              <span>☆</span><span>☆</span><span>☆</span><span>☆</span><span>☆</span>
+            </div>
+            <a href="javascript:void(0)" class="count_from_hybrid preview_product" data-product-id="{{ product.id }}">{{ product.metafields.custom.review_count_merge }} Reviews</a>
+          </div>
+      
+      {% endif %} -->
 
-      <div class="yotpo bottomLine"
+      <div class="yotpo bottomLine {% if product.id == 6841624920179 or product.id == 6841625935987 or product.id == 6841625280627 or product.id == 6841625575539 %}hide{% endif %}"
         data-product-id="{{ product.id }}">
       </div>
 

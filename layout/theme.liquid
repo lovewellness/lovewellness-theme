@@ -2,6 +2,35 @@
 <html class="no-js no-touch" lang="{{ request.locale.iso_code }}">
   <head>
 
+    {% assign boost_pfs_is_init = false %}    
+{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+    {%- unless template contains 'boost-pfs-original' -%}
+    {% assign boost_pfs_is_init = true %}
+	  {%- if request.page_type == 'collection' -%}
+    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/filter" />
+    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/filter" />
+    {%- else -%}
+    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/search" />
+    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/search" />
+    {%- endif -%}
+    <link rel="preload" href="{{ 'boost-pfs-vendor.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-core.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-filter.js' | asset_url }}" as="script">
+    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">
+    <link rel="preload" as="style" href="{{ 'boost-pfs-general.css' | asset_url }}">    
+    {%- endunless -%}
+{%- endif -%}    
+
+{%- unless boost_pfs_is_init -%}
+    <link rel="preload" href="{{ 'boost-pfs-core-instant-search.js' | asset_url }}" as="script">    
+    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">    
+    <link rel="preload" as="style" href="{{ 'boost-pfs-instant-search.css' | asset_url }}">
+{%- endunless -%}
+    <link rel="preload" as="style" href="{{ 'boost-pfs-custom.css' | asset_url }}">
+    
+    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
+    {{ 'splide.min.js' | asset_url | script_tag }}
+
     {% render 'preload-hints' %}
 
     {% if template.suffix contains 'referrals' %}
@@ -21,7 +50,7 @@
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
     <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
-     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.48&shop=dirt-project.myshopify.com"></script>
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.53&shop=dirt-project.myshopify.com"></script>
 <!-- End BlackCrow Script Tag -->
     {% endcapture %}
     {% render 'renderbetter-code', defer: 'analytics', code: code %}
@@ -34,13 +63,6 @@
     {% comment %}This code must come after meta tags in the head tag{% endcomment %}
     {% render 'renderbetter-code', place: 'head-after-meta-tags' %}
     {% comment %}end rb_code{% endcomment %}
-
-    {% comment %}begin rb_critical_css{% endcomment %}
-    {% capture css %}
-        {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
-    {% endcapture %}
-    {% render 'renderbetter-code', css: css %}
-    {% comment %}end rb_critical_css{% endcomment %}
 
     <title>
       {{- page_title -}}
@@ -247,28 +269,16 @@
     <!--begin-boost-pfs-filter-css-->
     {% render 'boost-pfs-style' %}
     <!--end-boost-pfs-filter-css-->    
-
-    {% comment %}begin rb_defer{% endcomment %}
-    {% capture code %}
-        <script defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
-    {% endcapture %}
-    {% render 'renderbetter-code', defer: 'analytics', code: code %}
-    {% comment %}end rb_defer{% endcomment %}
-
+    <script async defer src="https://tools.luckyorange.com/core/lo.js?site-id=78b1aa0c"></script>
   {% include 'store-credit-launcher' %}
 </head>
 
   <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
-    {% comment %}begin rb_defer{% endcomment %}
-    {% capture code %}
-        <script
-          async
-          src="https://na-library.klarnaservices.com/lib.js"
-          data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
-        ></script>
-    {% endcapture %}
-    {% render 'renderbetter-code', defer: 'enhancement', code: code %}
-    {% comment %}end rb_defer{% endcomment %}
+    <script
+      async
+      src="https://na-library.klarnaservices.com/lib.js"
+      data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
+    ></script>
     
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come right after the start of the body tag{% endcomment %}
@@ -529,134 +539,7 @@
         <div class="product-zoom--thumb-scroller" data-photoswipe-thumb-scroller></div>
       </div>
     </div>
-
-    
-
-    <script defer src="{{ 'splide.min.js' | asset_url  }}" ></script>
-
-
     {% comment %}Inject product-gallery-zoom end{% endcomment %}
-
-        {% comment %} START Evidon {% endcomment %}
-        <script defer src="https://c.evidon.com/dg/dg.js" companyid="6741"></script>
-
-        <script type="text/javascript">
-          document.addEventListener("DOMContentLoaded", () => {
-              (function (id) {
-              function append(scriptid, url, async) {
-                var d = document, sn = 'script', f = d.getElementsByTagName(sn)[0];
-                if (!f) f = d.head;
-                var s = d.createElement(sn);
-                s.async = async;
-                s.id = scriptid;
-                s.src = url;
-                s.charset = 'utf-8';
-                f.parentNode.insertBefore(s, f);
-              }
-      
-              function is2parttld(value) {
-                var tldindicators = ['co', 'com', 'info', 'web', 'info', 'gov', 'edu', 'biz', 'net', 'org'];
-                var countryindicators = ['uk', 'us', 'fr', 'es', 'de', 'at', 'au', 'ae', 'be', 'br', 'ca', 'ch', 'cn', 'co', 'cz', 'dk', 'eg', 'eu', 'fi', 'gb', 'gr', 'hk', 'hr', 'hu', 'ie', 'in', 'jp', 'mx', 'nl', 'no', 'nz', 'pl', 'ro', 'ru', 'se'];
-                return (tldindicators.indexOf(value) !== -1 || countryindicators.indexOf(value) !== -1);
-              }
-      
-              function getRootDomain() {
-                var parts = window.location.hostname.split('.');
-                if (parts.length === 2) rootDomain = parts[0];
-                else if (parts.length > 2) {
-                  // see if the next to last value is a common tld
-                  var part = parts[parts.length - 2];
-                  if (is2parttld(part)) {
-                    rootDomain = parts[parts.length - 3]; // go back one more
-                  }
-                  else {
-                    rootDomain = part;
-                  }
-                }
-      
-                return rootDomain;
-              }
-      
-              window.evidon = {};
-              window.evidon.id = id;
-              window.evidon.test = false;  // set to true for non-production testing.
-              //window.evidon.userid = '';
-      
-              var cdn = '//c.evidon.com/', rootDomain = getRootDomain(), noticecdn = cdn + 'sitenotice/';
-              append('evidon-notice', noticecdn + 'evidon-sitenotice-tag.js', false);
-              append('evidon-location', cdn + 'geo/country.js', true);
-              append('evidon-themes', noticecdn + id + '/snthemes.js', true);
-              if (rootDomain) append('evidon-settings', noticecdn + id + '/' + rootDomain + (window.evidon.test ? '/test' : '') + '/settings.js', true);
-      
-              window.evidon.priorConsentCallback = function (categories, vendors, cookies) {
-                // add the tags which need to wait for prior consent
-                // here.  This should be all your advertising tags and
-                // probably most of your social and tracking tags.
-                var handlers = {
-                  categories: {
-                    'advertiser': 'handleAdvertiser',
-                    'ad exchange': 'handleAdExchange',
-                    'ad network': 'handleAdNetwork',
-                    'ad server': 'handleAdServer',
-                    'ad verification': 'handleAdVerification',
-                    'agency': 'handleAgency',
-                    'analytics provider': 'handleAnalyticsProvider',
-                    'business intelligence': 'handleBusinessIntelligence',
-                    'content management/saas': 'handleContentManagementSaaS',
-                    'creative/ad format technology': 'handleCreativeAdFormatTechnology',
-                    'data aggregator/supplier': 'handleDataAggregatorSupplier',
-                    'data management platform': 'handleDataManagementPlatform',
-                    'demand side platform': 'handleDemandSidePlatform',
-                    'marketing solutions': 'handleMarketingSolutions',
-                    'mobile': 'handleMobile',
-                    'online privacy platform': 'handleOnlinePrivacyPlatform',
-                    'optimizer': 'handleOptimizer',
-                    'other': 'handleOther',
-                    'publisher': 'handlePublisher',
-                    'research provider': 'handleResearchProvider',
-                    'retargeter': 'handleRetargeter',
-                    'social media': 'handleSocialMedia',
-                    'supply side platform': 'handleSupplySidePlatform',
-                    'tag manager': 'handleTagManager',
-                    'video': 'handleVideo',
-                    'website optimization': 'handleWebsiteOptimization',
-                  },
-                  vendors: {}
-                };
-      
-                for (var category in categories) {
-                  if (!categories[category]) continue;
-                  var handler = window.evidon[handlers.categories[category]];
-                  if (typeof handler === 'function') handler();
-                }
-                for (var vendor in vendors) {
-                  if (!vendors[vendor]) continue;
-                  var handler = window.evidon[handlers.vendors[vendor]];
-                  if (typeof handler === 'function') handler();
-                }
-              }
-      
-              window.evidon.closeCallback = function () {
-                // this is executed if the user closed a UI element without either Accepting (providing consent)
-                // or Declining (declining to provide consent).
-              }
-      
-              window.evidon.consentWithdrawnCallback = function () {
-                // this is exeucted if the user withdraws consent and elects to
-                // no longer allow technologies to run on the site.
-              }
-      
-              window.evidon.consentDeclinedCallback = function () {
-                // this is executed if the user explicitly declines giving consent by
-                // using a Decline button
-                window.evidon.notice.dropSuppressionCookie(30);
-                console.log('declined consent');
-              }
-            })(6741);
-      
-          })
- </script>
-        {% comment %} END Evidon {% endcomment %} 
 
 
     {%- if template contains 'customer' -%}
@@ -699,6 +582,7 @@
       </script>
     {% endunless %}
     
+
 
     <script
       src="{{ 'theme.min.js' | asset_url }}"
@@ -803,6 +687,31 @@
     {% render 'renderbetter-code', place: 'body-bottom' %}
     {% comment %}end rb_code{% endcomment %}
     
+    {% comment %}UserWay Accessibility widget{% endcomment %}
+    <script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "4kKOWrBIgI");s.setAttribute("src", "https://accessibilityserver.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script><noscript>Please ensure Javascript is enabled for purposes of <a href="https://accessibilityserver.org">website accessibility</a></noscript>
+
+
+    <!-- START PebblePost PageViews Tracking Body -->
+    <script>
+      window._pp = window._pp || [];
+      _pp.brid = "2697";    
+      {% if customer.id %}
+      _pp.brcid = "{{ customer.id }}"; 
+      {% endif %}
+      {% if customer.email %} // Optional
+      _pp.email = "{{ customer.email }}"; // Optional
+      {% endif %} // Optional
+      (function() {
+      var ppjs = document.createElement('script');
+      ppjs.type = 'text/javascript';
+      ppjs.async = true;
+      ppjs.src = ('https:' == document.location.protocol ? 'https:' : 'http:') +
+      '//cdn.pbbl.co/r/' + _pp.brid + '.js';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(ppjs, s);
+      })();
+    </script>
+  <!-- END PebblePost PageViews Tracking Body -->
 
     
   {% render 'nosto-tagging' %}
