@@ -2,35 +2,6 @@
 <html class="no-js no-touch" lang="{{ request.locale.iso_code }}">
   <head>
 
-    {% assign boost_pfs_is_init = false %}    
-{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
-    {%- unless template contains 'boost-pfs-original' -%}
-    {% assign boost_pfs_is_init = true %}
-	  {%- if request.page_type == 'collection' -%}
-    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/filter" />
-    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/filter" />
-    {%- else -%}
-    <link rel="preconnect" href="https://services.mybcapps.com/bc-sf-filter/search" />
-    <link rel="dns-prefetch" href="https://services.mybcapps.com/bc-sf-filter/search" />
-    {%- endif -%}
-    <link rel="preload" href="{{ 'boost-pfs-vendor.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-core.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-filter.js' | asset_url }}" as="script">
-    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">
-    <link rel="preload" as="style" href="{{ 'boost-pfs-general.css' | asset_url }}">    
-    {%- endunless -%}
-{%- endif -%}    
-
-{%- unless boost_pfs_is_init -%}
-    <link rel="preload" href="{{ 'boost-pfs-core-instant-search.js' | asset_url }}" as="script">    
-    <link rel="preload" href="{{ 'boost-pfs-instant-search.js' | asset_url }}" as="script">    
-    <link rel="preload" as="style" href="{{ 'boost-pfs-instant-search.css' | asset_url }}">
-{%- endunless -%}
-    <link rel="preload" as="style" href="{{ 'boost-pfs-custom.css' | asset_url }}">
-    
-    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
-    {{ 'splide.min.js' | asset_url | script_tag }}
-
     {% render 'preload-hints' %}
 
     {% if template.suffix contains 'referrals' %}
@@ -63,6 +34,13 @@
     {% comment %}This code must come after meta tags in the head tag{% endcomment %}
     {% render 'renderbetter-code', place: 'head-after-meta-tags' %}
     {% comment %}end rb_code{% endcomment %}
+
+    {% comment %}begin rb_critical_css{% endcomment %}
+    {% capture css %}
+        {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
+    {% endcapture %}
+    {% render 'renderbetter-code', css: css %}
+    {% comment %}end rb_critical_css{% endcomment %}
 
     <title>
       {{- page_title -}}
@@ -274,11 +252,16 @@
 </head>
 
   <body class="template-{{ template.name }}" data-instant-allow-query-string {% if settings.reduce_animations %}data-reduce-animations{% endif %}>
-    <script
-      async
-      src="https://na-library.klarnaservices.com/lib.js"
-      data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
-    ></script>
+    {% comment %}begin rb_defer{% endcomment %}
+    {% capture code %}
+        <script
+          async
+          src="https://na-library.klarnaservices.com/lib.js"
+          data-client-id="2c6f0840-a6c3-5b89-8d60-6c81f9959949"
+        ></script>
+    {% endcapture %}
+    {% render 'renderbetter-code', defer: 'enhancement', code: code %}
+    {% comment %}end rb_defer{% endcomment %}
     
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come right after the start of the body tag{% endcomment %}
@@ -539,6 +522,12 @@
         <div class="product-zoom--thumb-scroller" data-photoswipe-thumb-scroller></div>
       </div>
     </div>
+
+    
+
+    <script defer src="{{ 'splide.min.js' | asset_url  }}" ></script>
+
+
     {% comment %}Inject product-gallery-zoom end{% endcomment %}
 
 
