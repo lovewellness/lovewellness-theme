@@ -27,24 +27,18 @@
 <section class="article--outer">
   {% if article.image %}
     <figure
-      class="article-image article-image--{{- section.settings.featured_image_width }}"
-      {%
-        render 'rimg',
-        img: article.image,
-        size: '1800x',
-        lazy: false,
-        crop: 'center',
-        background: true
-      %}
-    >
-      {%
-        render 'rimg',
-        img: article.image,
-        size: '1800x',
-        crop: 'center',
-        lazy: true,
-        canvas: true
-      %}
+      class="article-image article-image--{{- section.settings.featured_image_width }}">
+      <picture>
+        <source media="(min-width: 400px)" srcset="{{ article.image | img_url : '600x'}}">
+        <source media="(min-width: 500px)" srcset="{{ article.image | img_url : '1000x'}}">
+        <source media="(min-width: 600px)" srcset="{{ article.image | img_url : '1200x'}}">
+        <source media="(min-width: 700px)" srcset="{{ article.image | img_url : '1400x'}}">
+        <source media="(min-width: 900px)" srcset="{{ article.image | img_url : '1800x'}}">
+        <source media="(min-width: 1000px)" srcset="{{ article.image | img_url : '2000x'}}">
+        <source media="(min-width: 1500px)" srcset="{{ article.image | img_url : '3000x'}}">
+
+        <img src="{{ article.image | img_url : '390x'}}" >
+      </picture>
     </figure>
   {% endif %}
 
