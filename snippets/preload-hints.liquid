@@ -1,6 +1,3 @@
 {% if request.page_type == 'article' %}
-  {% assign rimg_w = '1800' %}
-  {% assign rimg_h = rimg_w | divided_by: article.image.aspect_ratio | ceil %}
-  {% assign rimg_size = '' | append: rimg_w | append: 'x' | append: rimg_h  %}
-  <link rel="preload" as="image" href="{{article.image | img_url:  rimg_size, crop: 'center'}}"  >
+  <link rel="preload" as="image" href="{{article.image | img_url: '390x'}}"  >
 {% endif %}
