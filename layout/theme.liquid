@@ -227,8 +227,6 @@
 
     {% include 'inject-header' %}
 
-    
-
     {% comment %}begin rb_code{% endcomment %}
     {% comment %}This code must come before the end of the head tag{% endcomment %}
     {% render 'renderbetter-code', place: 'head-bottom' %}
@@ -565,6 +563,7 @@
       data-shopify-common="{{ 'shopify_common.js' | shopify_asset_url }}"
       data-shopify-cart="{{ 'jquery.cart.js' | asset_url }}"
       data-pxu-polyfills="{{ 'polyfills.js' | asset_url }}"
+      defer
     >
     </script>
 
