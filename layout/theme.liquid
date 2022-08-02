@@ -210,9 +210,7 @@
       {% comment %}end rb_defer{% endcomment %}
     {% endif %}
 
-    <!-- Start of LittledataLayer -->
-    {% include 'LittledataLayer' %}
-    <!-- End of LittledataLayer -->
+
 
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
@@ -417,6 +415,10 @@
         <div class="modal-content" data-modal-content></div>
       </div>
     </div>
+
+    <!-- Start of LittledataLayer -->
+    {% include 'LittledataLayer' %}
+    <!-- End of LittledataLayer -->
     
     <!--begin-boost-pfs-js-->
     {% render 'boost-pfs' %}
