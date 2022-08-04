@@ -134,6 +134,13 @@
 
     {% comment %}begin rb_critical_css{% endcomment %}
     {% capture css %}
+    {{ 'splide-core.min.css' | asset_url | stylesheet_tag }}
+    {% endcapture %}
+    {% render 'renderbetter-code', css: css %}
+    {% comment %}end rb_critical_css{% endcomment %}
+
+    {% comment %}begin rb_critical_css{% endcomment %}
+    {% capture css %}
       {{ 'theme.css' | asset_url | stylesheet_tag }}
     {% endcapture %}
     {% render 'renderbetter-code', css: css %}
