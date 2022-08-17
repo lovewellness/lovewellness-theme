@@ -32,7 +32,7 @@
   {% endif %}
 {% endif %}
 
-{% form 'product', product, class: product_form_class, data-product-form: '' %}
+{% form 'product', product, data-productid: product.id, class: product_form_class, data-product-form: '' %}
   {% comment %}
     Display variant options for a product
 
@@ -138,7 +138,7 @@
         variants-ui
         variants-ui--default-variant
       "
-      name="id"
+      name="id" data-productid="{{ product.id }}"
       type="hidden"
       value="{{ product.variants.first.id }}"
       data-variants-ui
@@ -208,7 +208,7 @@
           variants-ui__select-main
           {{ select_main_classes }}
         "
-        name="id"
+        name="id" data-productid="{{ product.id }}"
         {{ hide_select_a11y }}
         data-variants
       >

@@ -6,6 +6,7 @@
     <h1 class="account-page-title">
       {{ 'customers.account.title' | t }}
     </h1>
+    
   </header>
 
   <div class="account-page-content">
@@ -61,8 +62,7 @@
         </div>
 
         <div class="account-rewards" data-tab-content="rewards" style="display:none;">
-          <div class="yotpo-widget-instance" data-yotpo-instance-id="45417"></div>
-          <div class="yotpo-widget-instance" data-yotpo-instance-id="45420"></div>
+          <div class="yotpo-widget-instance" data-yotpo-instance-id="215444"></div>
         </div>
 
         <div class="account-referrals" data-tab-content="referrals" style="display:none;">
@@ -106,14 +106,10 @@
         </div>
 
         <div class="account-info-block account-actions">
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {% when '@app' %}
-                <div class="account-info-block__app button button-secondary">
-                  {% render block %}
-                </div>
-            {%- endcase -%}
-          {%- endfor -%}
+
+          <!-- Begin Recharge code -->
+            <p><a class="button button-secondary" href="/tools/recurring/login/">Manage Subscriptions</a></p>
+          <!-- End Recharge code -->
 
           <a
             id="tribe-login-link"
