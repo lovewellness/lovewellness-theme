@@ -260,9 +260,9 @@
 </div>
 
 
-<!-- modal cart ajax (maxburst) -->
+<!-- modal cart ajax Sergey K. (Maxburst) -->
 
-{% if settings.enable_cart_modal %}
+{% if settings.enable_cart_modal and template != 'cart' %}
   <style>
     .cart-modal-container {
       position: absolute;
@@ -310,6 +310,30 @@
       text-align: left;
       text-decoration: none;
     }
+    .cart-modal-product .atc--product {
+      position: relative;
+    }
+    .cart-modal-product .atc--product-close {
+      position: absolute;
+      right: 10px;
+      color: rgb(var(--color-text-base));
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      transition: .2s;
+    }
+    .cart-modal-product .atc--product-close:hover {
+      transform: scale(1.2);
+    }
+    .cart-modal-product .atc--product-close:active {
+      transform: scale(.8);
+    }
+    .cart-modal-product .atc--product-close svg {
+      pointer-events: none;
+      width: 10px;
+      height: 10px;
+    }
   </style>
 
   <section class="cart-modal-container">
@@ -322,8 +346,8 @@
 
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-      document.querySelector('.site-header-cart--button.modal-cart').addEventListener('click', (event) => {
-          event.preventDefault();
+
+          function update_ajax_modal_cart() {
     
     	  if (!Shopify.formatMoney) {
               {% assign amount_format = '{{amount}}' %}
@@ -377,45 +401,53 @@
           
               document.querySelector('.cart-modal-list').innerHTML = '';
 
-                Object.keys(data.items).map((current_product) => {
-
-                function check_price() {
-                  let price = data.items[current_product].price;
-                    if (price > 0) {
-                      return `${data.items[current_product].quantity} x ${Shopify.formatMoney(price)}`;
-                    } else {
-                      return 'FREE';
-                    }
-                }
-
-                function get_discounted_price() {
-                  let price = data.items[current_product].price;
-                  let discounted_price = data.items[current_product].discounted_price;
-                  if (discounted_price < price) {
-                        discounted_price = price - discounted_price;
-                        return `<span class="discount-list-item">Subscription Discount (-${Shopify.formatMoney(discounted_price)})</span>`;
-                  } else {
-                        return '';
-                  }
-                }
+                if (data.item_count > 0) {
                   
-                let product = 
-                  `<li class="cart-modal-product">
-                      <div class="atc--product">
-                          <div class="atc--product-image">
-                              <img src="${data.items[current_product].image}" alt="${data.items[current_product].product_title}">
-                          </div>
-                          <div class="atc--product-details">
-                              <h2 class="atc--product-details--title"><a class="modal-productitem--title" href="${data.items[current_product].url}">${data.items[current_product].product_title}</a></h2>
-                              <span class="atc--product-details--price">${check_price()}</span>
-								${get_discounted_price()}	
-                          </div>
-                      </div>
-                   </li>`;
-
-                document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', product);
-
-              });
+                  Object.keys(data.items).map((current_product) => {
+  
+                  function check_price() {
+                    let price = data.items[current_product].price;
+                      if (price > 0) {
+                        return `${data.items[current_product].quantity} x ${Shopify.formatMoney(price)}`;
+                      } else {
+                        return 'FREE';
+                      }
+                  }
+  
+                  function get_discounted_price() {
+                    let price = data.items[current_product].price;
+                    let discounted_price = data.items[current_product].discounted_price;
+                    if (discounted_price < price) {
+                          discounted_price = price - discounted_price;
+                          return `<span class="discount-list-item">Subscription Discount (-${Shopify.formatMoney(discounted_price)})</span>`;
+                    } else {
+                          return '';
+                    }
+                  }
+                    
+                  let product = 
+                    `<li class="cart-modal-product" data-product-id="${data.items[current_product].id}">
+                        <div class="atc--product">
+                            <div class="atc--product-image">
+                                <img src="${data.items[current_product].image}" alt="${data.items[current_product].product_title}">
+                            </div>
+                            <div class="atc--product-details">
+                                <h2 class="atc--product-details--title"><a class="modal-productitem--title" href="${data.items[current_product].url}">${data.items[current_product].product_title}</a></h2>
+                                <span class="atc--product-details--price">${check_price()}</span>
+  								${get_discounted_price()}	
+                            </div>
+                        <button class="atc--product-close">{%- render 'icon-menu-close' -%}</button>  
+                        </div>
+                     </li>`;
+  
+                  document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', product);
+  
+                });
+                  
+              } else {
+                let cart_is_empty = '<h3 style="grid-column: 2; display: flex; justify-content: center;align-items: center;">{{ 'cart.general.cart_empty' | t }}</h3>';
+                document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', cart_is_empty);
+              }
 
               document.querySelector('.cart-modal-subtotal').innerHTML = 
                 `<span class="atc-banner--cart-subtotal">
@@ -426,8 +458,44 @@
 
               document.querySelector('.cart-modal-container').style.display = 'block';
               document.querySelector('.cart-modal-container').style.opacity = '1';         
-          });   
-      });
+          }); 
+      }
+    
+    document.querySelector('.site-header-cart--button.modal-cart').addEventListener('click', (event) => {
+      event.preventDefault();
+      update_ajax_modal_cart();
+    });
+
+    document.querySelector('.cart-modal-list').addEventListener('click', (event) => {
+      if (event.target.classList.contains('atc--product-close')) {
+  
+          let product_container = event.target.closest('.cart-modal-product');
+          let product_id = product_container.getAttribute('data-product-id');
+
+          /*let updateData = {
+            updates: {product_id: 5 }
+          }
+          
+          fetch('/cart/update.js', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updateData)
+          }).then(function (data) {          
+            console.log(data);
+          });*/
+
+
+          $.post({url: '/cart/update.js', data: `updates[${product_id}]=0`, 
+            success: function (response) {
+              update_ajax_modal_cart();
+            }
+          });
+         
+      }             		
+    });
     
     document.querySelector('.cart-modal-container-close').addEventListener('click', () => {
       document.querySelector('.cart-modal-container').style.display = '';

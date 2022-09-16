@@ -36,6 +36,8 @@
     This is the click to zoom setting, which is either 'disabled', 'mobile', 'desktop', or 'always'
 {% endcomment %}
 
+<script type="text/javascript" async="" src="https://static.rechargecdn.com/assets/js/widget.min.js?shop={{ request.host }}"></script>
+
 {% assign onboarding = onboarding | default: false %}
 {% assign layout = layout | default: nil %}
 {% assign is_featured_product = is_featured_product | default: false %}
@@ -222,7 +224,7 @@
                 class="product-form--regular"
                 data-product-form-regular
               >
-                <div data-product-form-area>
+                <div class="main-form-cart" data-product-form-area>
                   {% if is_product_modal %}
                     <div data-product-quickshop-message class="product-message--container"></div>
                   {% endif %}
@@ -264,7 +266,7 @@
 
       {% if layout == 'layout--three-col' %}
         <div class="product-form--regular" data-product-form-regular>
-          <div data-product-form-area>
+          <div class="main-form-cart" data-product-form-area>
             {% if is_product_modal %}
               <div data-product-quickshop-message class="product-message--container"></div>
             {% endif %}
@@ -330,8 +332,6 @@
 
 {% render 'sticky-mobile-cart' %}
 
-<!-- {% if on_sale %}sale{% endif %} -->
-
 <style>
 .rc-template__radio-group .rc-radio .rc-radio__label .rc-option__discount,
 .rc-selling-plans__label {
@@ -370,6 +370,20 @@
     }
 </style>
 
+{% if on_sale == true %}
+  <script type="text/javascript" async="async">
+      // Sergey K (Maxburst)
+      let observer = new MutationObserver((mutations) => {
+          let widget_subsave = document.querySelector('[data-label-text-subsave]');
+          if (widget_subsave) {
+              widget_subsave.textContent = '{{ settings.sale_text_widget }}';
+              observer.disconnect(); 
+          }
+      });      
+      observer.observe(document.body, { childList: true, subtree: true });
+  </script>
+{% endif %}
+
 <script type="text/javascript">
   
   // Sergey K (Maxburst)  
@@ -403,7 +417,11 @@
 
     get_yotpo();
   
-  {% endif %} 
+  {% endif %}
+  document.querySelector('.main-form-cart select.form-field-select').addEventListener('change', (event) => {
+    document.querySelector('.sticky-mobile-cart select.form-field-select').selectedIndex = event.target.selectedIndex;
+    document.querySelector('.sticky-mobile-cart select.form-field-select').dispatchEvent(new Event('change'));
+  });
 </script>
 {% render 'nosto-element', id:'productpage-nosto-1' %}
 

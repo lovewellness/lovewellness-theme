@@ -21,7 +21,7 @@
     {% comment %}begin rb_defer{% endcomment %}
     {% capture code %}
     <!-- Begin BlackCrow Script Tag: DO NOT MODIFY! -->
-     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.57&shop=dirt-project.myshopify.com"></script>
+     <script type="text/javascript" async src="https://shopify-init.blackcrow.ai/js/core/dirt-project.js?shopify_app_version=1.0.63&shop=dirt-project.myshopify.com"></script>
 <!-- End BlackCrow Script Tag -->
     {% endcapture %}
     {% render 'renderbetter-code', defer: 'analytics', code: code %}
@@ -146,6 +146,8 @@
     {% render 'renderbetter-code', css: css %}
     {% comment %}end rb_critical_css{% endcomment %}
 
+<!--     <link rel="preload" as="font" href="Brandon-Grotesque-Web-Regular.woff2"> -->
+
     {% comment %}Inject theme-object begin{% endcomment %}
     <script>
       window.Theme = window.Theme || {};
@@ -243,7 +245,6 @@
     {% render 'renderbetter-code', place: 'head-bottom' %}
     {% comment %}end rb_code{% endcomment %}
 
-    {%- render 'ordergroove_static_asset' -%}
     <!--begin-boost-pfs-filter-css-->
     {% render 'boost-pfs-style' %}
     <!--end-boost-pfs-filter-css-->    
@@ -287,7 +288,7 @@
     <div class="intersection-target" data-header-intersection-target></div>
     <div class="site-main-dimmer" data-site-main-dimmer></div>
     <main id="site-main" class="site-main" aria-label="Main content" tabindex="-1">
-      {%- render 'ordergroove_global' -%}{{ content_for_layout }}
+      {{ content_for_layout }}
     </main>
 
     {% section 'static-footer' %}

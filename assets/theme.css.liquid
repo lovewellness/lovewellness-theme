@@ -16404,10 +16404,10 @@ shopify-payment-terms {
   text-align: left;
   transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.product-gallery--navigation.loading {
+/*.product-gallery--navigation.loading {
   position: absolute;
   opacity: 0;
-}
+}*/
 @media screen and (min-width: 720px) {
   .product-gallery--navigation {
     margin-top: 0.5rem;
@@ -20470,7 +20470,8 @@ body#recharge-novum #recharge-te {
 	font-family: Brandon Grotesque,sans-serif !important;
 }
 
-.edit_subscription_info--wrapper .rc_btn.js-skip-btn {
+.edit_subscription_info--wrapper .rc_btn.js-skip-btn,
+.edit_subscription_info--wrapper .rc_btn.rc_btn--link.js-add-discount-btn {
 	background-color: #fff !important;
 	border-radius: 100px !important;
 	border: 1px solid #d4d9da!important;
@@ -20577,7 +20578,7 @@ body#recharge-novum #recharge-te #te-modal-content button {
   padding-bottom: 50px;
 }
 
-@media (max-width: 1056px) and (min-width: 1024px){
+@media (max-width: 1080px) and (min-width: 1024px){
     .rc-selling-plans {
     	bottom: 90px;
     }
@@ -20611,6 +20612,37 @@ body#recharge-novum #recharge-te #te-modal-content button {
 body#recharge-novum #recharge-te {
 	z-index: 300!important;
 }
+
+/* recharge */
+.rc-container-wrapper.rc_container_wrapper,
+.rc-container.rc_container {
+  min-height: 230px;
+}
+.rc-option__subsave {
+  min-height: 85px;
+}
+.rc-option__onetime {
+  min-height: 50px;
+}
+/* --- */
+
+/*.slideshow-slide__image.slideshow-slide__image--desktop {
+  max-width: 100%;
+  width: 1920px;
+  height: auto;
+}
+
+.slideshow-slide__image.slideshow-slide__image--mobile {
+  max-width: 100%;
+  width: 800px;
+  height: auto;
+}*/
+
+/*.atc-banner--cart-footer .atc-button--viewcart,
+.cart-modal-buttons .atc-button--viewcart {
+  display: none;
+  pointer-events: none;
+}*/
   
 /*# sourceMappingURL=theme.css.liquid.map */
 
