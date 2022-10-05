@@ -148,6 +148,16 @@
                 </div>
               {% endif %}
             {% when 'price' %}
+             <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(function(){
+                  document.getElementsByClassName('product-pricing')[0].parentElement.insertAdjacentHTML('beforebegin',
+    '<span class="new-paragraph"></span>');
+                  document.getElementsByClassName('new-paragraph')[0].innerText = document.querySelector('.product-description p').innerText; 
+                },2000);
+              });
+              
+            </script>
               {% if settings.product_ratings_reviews %}
                 <div class="product-ratings">
                   <span class="shopify-product-reviews-badge" data-id="{{ product.id }}">

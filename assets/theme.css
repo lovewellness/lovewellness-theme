@@ -20624,6 +20624,9 @@ body#recharge-novum #recharge-te {
 .rc-option__onetime {
   min-height: 50px;
 }
+.account-login div#rc_login {
+	display: none!important;
+}
 /* --- */
 
 /*.slideshow-slide__image.slideshow-slide__image--desktop {

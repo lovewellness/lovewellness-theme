@@ -1,0 +1,1 @@
+{"sections":{"recharge-bundles-widget":{"type":"apps","blocks":{"recharge-bundles-widget-block":{"type":"shopify:\/\/apps\/recharge-subscriptions\/blocks\/bundles-widget\/371eed76-0b44-4869-9813-730372ea378e","settings":{"product":"{{ product }}"}}},"block_order":["recharge-bundles-widget-block"],"settings":{}}},"order":["recharge-bundles-widget"]}

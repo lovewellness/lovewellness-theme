@@ -401,7 +401,7 @@
           
               document.querySelector('.cart-modal-list').innerHTML = '';
 
-                if (data.item_count > 0) {
+                if (data.total_price > 0) {
                   
                   Object.keys(data.items).map((current_product) => {
   
@@ -441,12 +441,14 @@
                      </li>`;
   
                   document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', product);
+                  document.querySelector('.site-header-cart--count.visible').setAttribute('data-header-cart-count', data.item_count);
   
                 });
                   
               } else {
                 let cart_is_empty = '<h3 style="grid-column: 2; display: flex; justify-content: center;align-items: center;">{{ 'cart.general.cart_empty' | t }}</h3>';
                 document.querySelector('.cart-modal-list').insertAdjacentHTML('beforeend', cart_is_empty);
+                document.querySelector('.site-header-cart--count.visible').classList.remove('visible');
               }
 
               document.querySelector('.cart-modal-subtotal').innerHTML = 
@@ -459,8 +461,8 @@
               document.querySelector('.cart-modal-container').style.display = 'block';
               document.querySelector('.cart-modal-container').style.opacity = '1';         
           }); 
-      }
-    
+    }
+
     document.querySelector('.site-header-cart--button.modal-cart').addEventListener('click', (event) => {
       event.preventDefault();
       update_ajax_modal_cart();
@@ -487,9 +489,23 @@
             console.log(data);
           });*/
 
+          function empty_state_cart(json){
+               $.ajax({
+                type: "POST",
+                url: '/cart/clear.js',
+                success: function(){
+                },
+                dataType: 'json'
+              }); 
+              update_ajax_modal_cart();
+          }
 
           $.post({url: '/cart/update.js', data: `updates[${product_id}]=0`, 
             success: function (response) {
+              let response_json = JSON.parse(response)
+              if (response_json.item_count > 0 && response_json.total_price === 0) {
+                  empty_state_cart(response_json);     
+              }
               update_ajax_modal_cart();
             }
           });

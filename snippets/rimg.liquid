@@ -309,6 +309,22 @@
     {% endif %}
     alt="{{ rimg_alt }}"
 
+    {% comment %}{% if hero == true and class == 'slideshow-slide__image slideshow-slide__image--desktop' %}
+        width="1920"
+      {% else %}
+         width="800"
+      {% endif %}
+        
+      height="auto"{% endcomment %}
+
+    {% if class == 'slideshow-slide__image slideshow-slide__image--desktop' %}
+      width="1920"
+    {% elsif class == 'slideshow-slide__image slideshow-slide__image--mobile' %}
+       width="800"
+    {% endif %}
+
+    height="auto"
+
     {% if lazy %}
       data-rimg="lazy"
       data-rimg-scale="{{ rimg_scale }}"
